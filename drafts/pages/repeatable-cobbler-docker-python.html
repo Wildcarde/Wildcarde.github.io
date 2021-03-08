@@ -3,7 +3,7 @@
 <head>
         <meta charset="utf-8" />
         <meta name="generator" content="Pelican" />
-        <title>Putting the Pieces Together</title>
+        <title>Repeatable Cobbler using Docker and Python</title>
         <link rel="stylesheet" href="http://blog.shadowgears.com/theme/css/main.css" />
         <link href="http://blog.shadowgears.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Putting the Pieces Together Atom Feed" />
 </head>
@@ -16,10 +16,12 @@
                 </ul></nav>
         </header><!-- /#banner -->
 <section id="content" class="body">
-    <h2>Pages</h2>
-    <ul>
-        <li><a href="http://blog.shadowgears.com/pages/glasscanopy-campaign-report-0.html">Glass Canopy Campaign, Report 0</a></li>
-    </ul>
+    <h1 class="entry-title">Repeatable Cobbler using Docker and Python</h1>
+    
+    <p>We've been running a new install of cobbler at work for the last few months that was scratched together in my free time meant to simplify running and maintaining the service.  Inspired by our older install managing to corrupt itself so thorougly that we couldn't properly recover it, as well as the install itself being rather cumbersome to maintain. When desinging this setup the goal was an easy to reason about solution that you could spin up as long as you had a few components in the right spaces. It doesn't (currently) do much to hold your hand beyond that but I'm looking to improve it as time permits. The code for this can be found in our teams public <a href="https://github.com/PrincetonUniversity/pni-cobbler">work repository</a>.</p>
+<h2>Base Layer</h2>
+<p>This is currently built on the centos 7 EPEL variant of cobbler, but work is ongoing to upgrade to the latest stable version of the software. A few API changes have however delayed that for the time being, the EPEL version has proven sufficient for our needs in the mean time.</p>
+<h2>Structure</h2>
 </section>
         <section id="extras" class="body">
                 <div class="social">
