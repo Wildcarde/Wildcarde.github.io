@@ -1,58 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Putting the Pieces Together</title>
+        <title>Putting the Pieces Together - Tags</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charset="utf-8" />
-        <link rel="stylesheet" href="http://blog.shadowgears.com/theme/css/main.css" type="text/css" />
-        <link href="http://blog.shadowgears.com/" type="application/atom+xml" rel="alternate" title="Putting the Pieces Together ATOM Feed" />
-
-        <!--[if IE]>
-                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
-        <!--[if lte IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="http://blog.shadowgears.com/css/ie.css"/>
-                <script src="http://blog.shadowgears.com/js/IE8.js" type="text/javascript"></script><![endif]-->
-
-        <!--[if lt IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="http://blog.shadowgears.com/css/ie6.css"/><![endif]-->
-
+        <!-- twitter card metadata -->
+        <!-- OG Tags -->
+        <!-- favicon -->
+        <!-- moment.js for date formatting -->
+        <script src="http://blog.shadowgears.com/theme/js/moment.js"></script>
+        <!-- css -->
+        <link rel="stylesheet" type="text/css" href="http://blog.shadowgears.com/theme/css/main.css" />
+		<script>
+			
+                /*! grunt-grunticon Stylesheet Loader - v2.1.2 | https://github.com/filamentgroup/grunticon | (c) 2015 Scott Jehl, Filament Group, Inc. | MIT license. */
+    
+    (function(e){function t(t,n,r,o){"use strict";function a(){for(var e,n=0;u.length>n;n++)u[n].href&&u[n].href.indexOf(t)>-1&&(e=!0);e?i.media=r||"all":setTimeout(a)}var i=e.document.createElement("link"),l=n||e.document.getElementsByTagName("script")[0],u=e.document.styleSheets;return i.rel="stylesheet",i.href=t,i.media="only x",i.onload=o||null,l.parentNode.insertBefore(i,l),a(),i}var n=function(r,o){"use strict";if(r&&3===r.length){var a=e.navigator,i=e.Image,l=!(!document.createElementNS||!document.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect||!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image","1.1")||e.opera&&-1===a.userAgent.indexOf("Chrome")||-1!==a.userAgent.indexOf("Series40")),u=new i;u.onerror=function(){n.method="png",n.href=r[2],t(r[2])},u.onload=function(){var e=1===u.width&&1===u.height,a=r[e&&l?0:e?1:2];n.method=e&&l?"svg":e?"datapng":"png",n.href=a,t(a,null,null,o)},u.src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==",document.documentElement.className+=" grunticon"}};n.loadCSS=t,e.grunticon=n})(this);(function(e,t){"use strict";var n=t.document,r="grunticon:",o=function(e){if(n.attachEvent?"complete"===n.readyState:"loading"!==n.readyState)e();else{var t=!1;n.addEventListener("readystatechange",function(){t||(t=!0,e())},!1)}},a=function(e){return t.document.querySelector('link[href$="'+e+'"]')},c=function(e){var t,n,o,a,c,i,u={};if(t=e.sheet,!t)return u;n=t.cssRules?t.cssRules:t.rules;for(var l=0;n.length>l;l++)o=n[l].cssText,a=r+n[l].selectorText,c=o.split(");")[0].match(/US\-ASCII\,([^"']+)/),c&&c[1]&&(i=decodeURIComponent(c[1]),u[a]=i);return u},i=function(e){var t,o,a;o="data-grunticon-embed";for(var c in e)if(a=c.slice(r.length),t=n.querySelectorAll(a+"["+o+"]"),t.length)for(var i=0;t.length>i;i++)t[i].innerHTML=e[c],t[i].style.backgroundImage="none",t[i].removeAttribute(o);return t},u=function(t){"svg"===e.method&&o(function(){i(c(a(e.href))),"function"==typeof t&&t()})};e.embedIcons=i,e.getCSS=a,e.getIcons=c,e.ready=o,e.svgLoadedCallback=u,e.embedSVG=u})(grunticon,this);
+                
+                grunticon(["http://blog.shadowgears.com/theme/css/icons.data.svg.css", "http://blog.shadowgears.com/theme/css/icons.data.png.css", "http://blog.shadowgears.com/theme/css/icons.fallback.css"]);
+            </script>
+        <noscript><link href="http://blog.shadowgears.com/theme/css/icons.fallback.css" rel="stylesheet"></noscript>
+        <!-- menu toggle javascript -->
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", initMenu);
+            
+            function initMenu(){
+                var menu = document.getElementById("menu");
+                var menulink = document.getElementById("menu-link");
+                menulink.addEventListener("click", function toggleMenu(){
+                        window.event.preventDefault();
+                        menulink.classList.toggle('active');
+                        menu.classList.toggle('active');              
+                    });
+            };
+        </script>
 </head>
-
 <body>
-	<div id="wrap" style="width:850px">
-	    <div id="container" style="width:560px">
-
-
-            <div class="entry">
-<ul>
-    <li><a href="http://blog.shadowgears.com/tag/glass-canopy.html">Glass Canopy</a></li>
-    <li><a href="http://blog.shadowgears.com/tag/dnd.html">DND</a></li>
-</ul>
-            </div>
-        </div>
-
-
-        <div id="sidebar">
-            <h1><a href="http://blog.shadowgears.com " title="title">Putting the Pieces Together</a></h1>
-            <span class="description"> </span>
-            <!-- <span class="feed"><a href="">RSS</a> | <a href="">Atom</a></span> -->
-        </div>
-
-        <div id="footer">
-            <nav>
+    <div role="banner" id="masthead">
+        <header>
+            <h1><a href="/">Garrett's Blog</a></h1>
+            <a href="#menu" id="menu-link">more stuff</a>
+            <nav id="menu">
                 <ul>
-                    <li>:: <a href="http://blog.shadowgears.com/tags.html">Tags</a></li>
+                            <li><a href="http://blog.shadowgears.com/category/glass-canopy.html">Glass Canopy</a></li>
                 </ul>
             </nav>
-
-            <div id="credits">
-                <span>Adapted from <a href="http://wordpress.org/themes/monospace">Monospace</a> || Created with <a href="">Pelican</a></span>
-            </div>
-                
-        </div>
-
-
+        </header>
     </div>
-
+        <div class="page" role="main">
+<div class="page-title">
+        <h1>tags</h1>
+</div>
+<div class="articles">
+    <ul>
+        <li><a href="http://blog.shadowgears.com/tag/glass-canopy.html">Glass Canopy</a> <span class="count">(1)</span></li>
+        <li><a href="http://blog.shadowgears.com/tag/dnd.html">DND</a> <span class="count">(1)</span></li>
+    </ul>
+</div>
+                <footer>
+                    <div class="icons">
+                        <a href="https://twitter.com/Wildcarde815" target="_blank"><div class="icon-twitter icon"></div></a>
+                        <a href="https://github.com/Wildcarde" target="_blank"><div class="icon-github icon"></div></a>
+                    </div>
+                    <p>© <script>document.write(moment().format('YYYY'));</script> Garrett McGrath</p>
+ 
+                    <p><i>"Brutal"</i> Pelican Theme</p>
+                    <p>Designed and built by <a href="http://twitter.com/mcman_s">@mcman_s</a> in Denver</p>
+                </footer>
+        </div>
 </body>
 </html>
