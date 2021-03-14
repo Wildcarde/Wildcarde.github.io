@@ -546,7 +546,7 @@ footer p {
   padding-bottom: 1.75em;
   padding-top: 1em;
   display: block;
-  background-color: #f5f5f5;
+  background-color: #fffff4;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25em;
   padding: 0.5em;
@@ -583,7 +583,7 @@ footer p {
 /* END ARTICLE */
 /* TAGS */
 .tag {
-  background: #E1ECF4;
+  background: #fbf7f5;
   border-radius: 3px;
   color: #39739d;
   display: inline-block;
