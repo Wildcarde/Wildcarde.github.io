@@ -82,6 +82,47 @@
 * https://github.com/cpina/push-to-another-repository-example
 * https://nolanbconaway.github.io/pelican-deploy-gh-actions/pages/deployment-on-github-pages.html
 * https://docs.github.com/en/actions/quickstart</p>
+<p>currently using: github actions based on ubuntu-latest, python setup comamnds, and the push directory to another repository action:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pelican-Publisher</span>
+
+<span class="c1"># Run this workflow ever time a new commit is pushed ot the repo</span>
+<span class="nt">on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+  <span class="nt">publish</span><span class="p">:</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Publish</span> 
+
+    <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+    <span class="nt">steps</span><span class="p">:</span>
+      <span class="c1">## pull the committed code into an environment.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Checkout Code</span>
+        <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set up Python 3.9</span>
+        <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v2</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">python-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.9</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Install Dependencies</span>
+        <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">python -m pip install --upgrade pip</span>
+          <span class="no">pip install -r requirements.txt</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Build Site</span>
+        <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">make publish</span>
+      <span class="c1"># push generated site to public repo</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pushes to another repository</span>
+        <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push_directory</span>
+        <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpina/github-action-push-to-another-repository@v1.2</span>
+        <span class="nt">env</span><span class="p">:</span>
+          <span class="nt">API_TOKEN_GITHUB</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.APITOKENPUBLISH }}</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">source-directory</span><span class="p">:</span> <span class="s">&#39;output&#39;</span>
+          <span class="nt">destination-github-username</span><span class="p">:</span> <span class="s">&#39;Wildcarde&#39;</span>
+          <span class="nt">destination-repository-name</span><span class="p">:</span> <span class="s">&#39;Wildcarde.github.io&#39;</span>
+          <span class="nt">user-email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gmcgrath815@gmail.com</span>
+          <span class="nt">commit-message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Automated Update</span>
+          <span class="nt">target-branch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+</code></pre></div>
       </div>
       <div class="back-to-top">
           <a href="#top">back to top</a>
