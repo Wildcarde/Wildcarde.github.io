@@ -9,7 +9,7 @@
 <meta name="twitter:title" content="Building the Blog">
 <meta name="twitter:description" content="">
         <!-- OG Tags -->
-<meta property="og:url" content="https://blog.shadowgears.com/drafts/building-the-blog.html"/>
+<meta property="og:url" content="https://blog.shadowgears.com/building-the-blog.html"/>
 <meta property="og:title" content="Putting the Pieces Together | Building the Blog" />
 <meta property="og:description" content="" />
         <!-- favicon -->
@@ -54,6 +54,7 @@
             <nav id="menu">
                 <ul>
                             <li><a href="https://blog.shadowgears.com/category/glass-canopy.html">Glass Canopy</a></li>
+                            <li class="active"><a href="https://blog.shadowgears.com/category/howto.html">HowTo</a></li>
                 </ul>
             </nav>
         </header>
@@ -106,7 +107,7 @@
 <p>Once the above is added to git it can be committed and pushed up to the private repository.  This sets up the base you need to build on going forward.</p>
 <h3>Custom URL</h3>
 <p>If using a custom url (like say <code>blog.shadowgears.com</code>) you'll need to do a few things:</p>
-<p>1) make a folder inside your <code>content</code> folder named <code>extra</code> and add a file named <code>CNAME</code> with the custom domain name in it, that will handle the CNAME id file required by <a href="https://docs.github.com/en/github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site">github pages</a>.
+<p>1) make a folder inside your <code>content</code> folder named <code>extra</code> and add a file named <code>CNAME</code> with the custom domain name in it, that will handle the CNAME id file required by <a href="https://docs.github.com/en/github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site">github pages</a>.<br>
 2) Add the following to your <code>pelicanconf.py</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="n">STATIC_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;extra&#39;</span><span class="p">,</span><span class="s1">&#39;extra/CNAME&#39;</span><span class="p">]</span>  <span class="c1">#this flags these folders as &#39;static&#39; they will not be run through any parsers</span>
 <span class="n">EXTRA_PATH_METADATA</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;extra/CNAME&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;CNAME&#39;</span><span class="p">}}</span> <span class="c1">#this takes the file and puts it at the root of the published directory and names it CNAME per the requirements in the github pages docs</span>
@@ -123,9 +124,9 @@
 <p>At this point you can publish the content, using the <code>make publish</code> command will push a full processed copy of the content folder to <code>output</code>, and for some that's probably anywhere between good and fine. But that's not something I want to have to remember every time I write something new, so the next step is to solve automatic publishing!  We'll be pushing from our private repository to the public one so we are going to need a <a href="https://github.com/settings/tokens">personal access token</a> with the <code>repo-&gt;public repo</code> privileges, I've tested no additional privileges are required.  Make sure you note this key value down somewhere you can copy / paste it.</p>
 <p>The next step is going to be adding this as a secret attached to your private repository, this is done in the specific private repos <code>settings-&gt;secrets</code>, simply add a new secret named <code>APITOKENPUBLISH</code> and paste the contents of the generated token above in as the value. This will be used by the github action we'll be setting up next.</p>
 <p>Now that we've got the basics needed to make this work all that's required is adding the automatic workflow to the private repository.  This will be broken into a few steps:</p>
-<p>1) Checkout a copy of the repository.
-2) Run <code>make publish</code> on the contents of the repository.
-3) Clone the public repository into a separate location, copy the output of <code>make publish</code> into it, and push it back out.</p>
+<p>1) Checkout a copy of the repository.<br>
+2) Run <code>make publish</code> on the contents of the repository.<br>
+3) Clone the public repository into a separate location, copy the output of <code>make publish</code> into it, and push it back out.  </p>
 <p>To get this started we'll need a new set of folders at the root of the repository named <code>.github/workflows</code>, inside here is where we'll place the rest of the magic.  Once that folder is in-place we are going to need a yaml file inside it, this can be named whatever but I'm going for <code>pelican-publish.yml</code>.  This is going to be a <a href="https://docs.github.com/en/actions/quickstart">github actions</a> file and is the reason we made that secret entry further up the post.  A full copy of the action file is included at the end of this post, the following sections break down the sub parts.</p>
 <h3>Setup the Environment</h3>
 <p>This initial segment sets up some rules and the python environment.  We'll be naming the action <code>Pelican-Publisher</code>, restricting it to only run on pushes to our source repository, and instructing it to run on ubuntu.  This last part we could probably make something lighter weight just so it runs a little faster (this process is slower than I'd like) but for simplicity and compatibility with most published documentation and actions I stuck with ubuntu here.  The last bits of this step check out the private repository and creates a python environment </p>
