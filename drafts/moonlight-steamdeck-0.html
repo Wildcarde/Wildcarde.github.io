@@ -6,11 +6,11 @@
         <meta charset="utf-8" />
         <!-- twitter card metadata -->
 <meta name="twitter:site" content="@Wildcarde815">
-<meta name="twitter:title" content="Glass Canopy Campaign, Report 0.5">
+<meta name="twitter:title" content="Setting up Moonlight and Sunshine to Stream to Steamdeck">
 <meta name="twitter:description" content="">
         <!-- OG Tags -->
-<meta property="og:url" content="https://blog.shadowgears.com/drafts/glasscanopy-campaign-report-0.5.html"/>
-<meta property="og:title" content="Putting the Pieces Together | Glass Canopy Campaign, Report 0.5" />
+<meta property="og:url" content="https://blog.shadowgears.com/drafts/moonlight-steamdeck-0.html"/>
+<meta property="og:title" content="Putting the Pieces Together | Setting up Moonlight and Sunshine to Stream to Steamdeck" />
 <meta property="og:description" content="" />
         <!-- favicon -->
         <!-- moment.js for date formatting -->
@@ -42,8 +42,8 @@
         </script>
 
 
-    <meta name="tags" content="Glass Canopy" />
-    <meta name="tags" content="DND" />
+    <meta name="tags" content="deployment" />
+    <meta name="tags" content="blog" />
 
 </head>
 <body>
@@ -53,8 +53,8 @@
             <a href="#menu" id="menu-link">more stuff</a>
             <nav id="menu">
                 <ul>
-                            <li class="active"><a href="https://blog.shadowgears.com/category/glass-canopy.html">Glass Canopy</a></li>
-                            <li><a href="https://blog.shadowgears.com/category/howto.html">HowTo</a></li>
+                            <li><a href="https://blog.shadowgears.com/category/glass-canopy.html">Glass Canopy</a></li>
+                            <li class="active"><a href="https://blog.shadowgears.com/category/howto.html">HowTo</a></li>
                 </ul>
             </nav>
         </header>
@@ -65,21 +65,32 @@
         <footer>
             <a name="top"></a>
             <p>
-              <time datetime=" 2022-08-16 12:00:00-04:00">
-                <script>document.write(moment('2022-08-16 12:00:00-04:00').format('LL'));</script>
+              <time datetime=" 2023-09-14 00:00:00-04:00">
+                <script>document.write(moment('2023-09-14 00:00:00-04:00').format('LL'));</script>
               </time>
             </p>
         </footer>
         <header>
           <h2>
-            Glass Canopy Campaign, Report 0.5
+            Setting up Moonlight and Sunshine to Stream to Steamdeck
           </h2>
         </header>
       <div class="content">
-         <p>This served somewhat as a retroactive 'Adventure 0' for the group, allowing the players to introduce and engage with a variety of situations that helped flesh out their characters for each other. The events rollout immediately in the aftermath of the previous adventure, with the group walking away with their first group contract under their belts (plus a 50 gold penalty for burning the cart).</p>
-<h2>Francis Woeman, Chronicler of Curiosities and Knowledge</h2>
-<h2>Norah and Nona, Aspiring Bards (and orphans)</h2>
-<h2>Haki, Leader of the Scaleshorn Union</h2>
+         <h1>The Problem</h1>
+<p>While steam streaming and sunshine are both pretty straight forward to configure if you don't ask much from them, getting them to play nice with a 3 screen computer setup is a relatively poor experience.  This is doubly true if the main screen in use is an ultrawide as these tools do not change the aspect ratio or screen behaviors when streaming out of the box. So when you have a screen setup that looks like a Tie FIghter it is a less than ideal experience between sunshine and moonlight. Lets solve that!</p>
+<h1>The Goal</h1>
+<p>When you initiate a connection to sunshine from moonlight on the steamdeck automatically configure the windows pc to disable secondary displays and adjust the resolution to match the steamdeck.  When the moonlight connection is terminated, roll back these changes and restore the screens to their default resolution and state.</p>
+<h2>Prereqs</h2>
+<p>There's a few things we are going to take for granted here to start.</p>
+<ul>
+<li>You (the reader) have an up to date copy of sunshine installed on your desktop of choice</li>
+<li>The basics of this are covered in the sunshine docs: https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/installation.html</li>
+<li>You have a copy of moonlight installed and configured as a tile on your steamdeck</li>
+<li>This is covered extensively in blog posts and youtube videos the world over, this was the first google hit for me and looks to be a solid explanation: https://pimylifeup.com/steam-deck-moonlight/</li>
+<li>A copy of NirSoft's Multi-Monitor Tool: https://www.nirsoft.net/utils/multi_monitor_tool.html</li>
+<li>This should be placed somewhere you can easily locate and reliably find.  I put it inside a folder simply labeled 'programs' in my home directory</li>
+<li>A piece of software you want to make work by streaming to your steamdeck, I'll be using playnite (https://playnite.link/) as it lets me aggregate all my desktop game stores into one interface.</li>
+</ul>
       </div>
       <div class="back-to-top">
           <a href="#top">back to top</a>

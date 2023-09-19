@@ -76,10 +76,20 @@
           </h2>
         </header>
       <div class="content">
-         <p>We've been running a new install of cobbler at work for the last few months that was scratched together in my free time meant to simplify running and maintaining the service.  Inspired by our older install managing to corrupt itself so thorougly that we couldn't properly recover it, as well as the install itself being rather cumbersome to maintain. When desinging this setup the goal was an easy to reason about solution that you could spin up as long as you had a few components in the right spaces. It doesn't (currently) do much to hold your hand beyond that but I'm looking to improve it as time permits. The code for this can be found in our teams public <a href="https://github.com/PrincetonUniversity/pni-cobbler">work repository</a>.</p>
+         <p>We've been running a new install of cobbler at work for the last few months that was scratched together in my free time meant to simplify running and maintaining the service.  Inspired by our older install managing to corrupt itself so thoroughly that we couldn't properly recover it, as well as the install itself being rather cumbersome to maintain. When designing this setup the goal was an easy to reason about solution that you could spin up as long as you had a few components in the right spaces. It doesn't (currently) do much to hold your hand beyond that but I'm looking to improve it as time permits. The code for this can be found in our teams public <a href="https://github.com/PrincetonUniversity/pni-cobbler">work repository</a>.</p>
 <h2>Base Layer</h2>
-<p>This is currently built on the centos 7 EPEL variant of cobbler, but work is ongoing to upgrade to the latest stable version of the software. A few API changes have however delayed that for the time being, the EPEL version has proven sufficient for our needs in the mean time.</p>
+<p>This is currently built on the centos 7 EPEL variant of cobbler (2.8.5), but work is ongoing to upgrade to the latest stable version of the software. A few API changes have however delayed that, the EPEL version has proven sufficient for our needs in the mean time.</p>
+<h2>Assumptions</h2>
+<p>This container is built on a few specific assumptions:</p>
+<ul>
+<li>there is a free standing dhcp</li>
+<li>the dchp server has the capacity to provide a <code>next-server</code> ip and file to requesting clients</li>
+<li>it does not own the data being presented and nothing loaded into the service will persist across a recreation of the container.</li>
+<li>the end user is familiar with docker and volume mounts and docker-compose</li>
+</ul>
 <h2>Structure</h2>
+<p>This system is currently built on top of a centos 7 base image. This is primarily due to local familiarity but also because cobblers older rpms sort of 'just work' on centos 7 right now. Layered over that is a supervisord configuration capable of starting cobblers constituent parts and a <code>forklift</code> script for importing flat configuration files into the system and provide the 'repeatable' side of this setup.</p>
+<p>The list of services started as part of this container can be found in the <a href="https://github.com/PrincetonUniversity/pni-cobbler/tree/master/supervisord/conf.d">supervisord/conf.d</a> folder.</p>
       </div>
       <div class="back-to-top">
           <a href="#top">back to top</a>
