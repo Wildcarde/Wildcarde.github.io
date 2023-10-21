@@ -100,16 +100,23 @@
 <li>The working directory you want the program to run in, some applications don't care but playnite does so: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code></li>
 </ul>
 <h1>HowTo</h1>
-<p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we'll use a set of batch scripts to swap the two modes back and forth automatically.</p>
+<p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we'll use a set of batch scripts to swap the two modes back and forth automatically. You could make this more robust using a proper scripting language like powershell or python but for our purposes here a brute force batch file is sufficient.</p>
 <h2>Capture Monitor Configurations</h2>
-<p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the multimonitortool gui and you'll see a window similar to below.</p>
-<p><img alt="multimonitor all screens enabled" src="/images/2023-multimon-all.png"></p>
+<p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the multimonitortool GUI and you'll see a window similar to below.</p>
+<p><img alt="multimonitor all screens enabled" src="https://blog.shadowgears.com/drafts/2023-multimon-all.png"></p>
+<p>Once everything is configured as desired, simply go to the <code>File</code> menu button and select <code>Save Monitors Configuration</code>.  Place this file somewhere easily located and named something sensible. In my case I chose to simply put this in the folder for MultiMonitorTool and name it <code>default.cfg</code> as this makes the scripts below easier.</p>
+<p>After this is complete, reconfigure the screens to be setup as you would like them to be for the steamdeck or other streaming target. For the steamdeck, the native resolution is <code>1280x800</code>; so I've disabled the right and left screens on my system and set the primary screens resolution to <code>1280x800</code>.</p>
+<p>Once this is complete, check that the changes are reflected in MultiMonitorTool's GUI (as below) and save this new configuration in the same place as the first.  I named this file simply <code>steamdeck-native.cfg</code> so it's easy to find.</p>
+<p><img alt="MultiMonitorTool Steamdeck Native Config" src="https://blog.shadowgears.com/drafts/2023-multimon-single.png"></p>
 <h2>Start Script</h2>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">: disable secondary monitors and switch main monitor to steamdeck native resolution</span>
 <span class="p">:</span><span class="c1">:</span>
 <span class="p">@</span><span class="k">ECHO</span> OFF
+<span class="p">:</span><span class="c1">: update working directory to location of multi monitor tool software.</span>
 <span class="k">cd</span> C:\Users\<span class="p">&lt;</span>username<span class="p">&gt;</span>\Programs\multimonitortool-x64
+<span class="p">:</span><span class="c1">: toggle off secondary displays</span>
 .\MultiMonitorTool.exe /disable 2 3
+<span class="p">:</span><span class="c1">: load desired steamdeck compatible configuration</span>
 .\MultiMonitorTool.exe /LoadConfig ./steamdeck-native.cfg
 timeout /t 2
 </code></pre></div>
