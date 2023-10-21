@@ -77,27 +77,55 @@
         </header>
       <div class="content">
          <h1>The Problem</h1>
-<p>While steam streaming and sunshine are both pretty straight forward to configure if you don't ask much from them, getting them to play nice with a 3 screen computer setup is a relatively poor experience.  This is doubly true if the main screen in use is an ultrawide as these tools do not change the aspect ratio or screen behaviors when streaming out of the box. So when you have a screen setup that looks like a Tie FIghter it is a less than ideal experience between sunshine and moonlight. Lets solve that!</p>
+<p>While Steam streaming and Sunshine are both pretty straight forward to configure if you don't ask much from them, getting them to play nice with a 3 screen computer setup is a relatively poor experience.  This is doubly true if the main screen in use is an ultrawide as these tools do not change the aspect ratio or screen behaviors when streaming out of the box. So when you have a screen setup that looks like a Tie Fighter it is a less than ideal experience between sunshine and moonlight. Lets solve that!</p>
 <h1>The Goal</h1>
-<p>When you initiate a connection to sunshine from moonlight on the steamdeck the system should automatically configure the windows pc. This includes disabling secondary displays and adjusting the resolution to match the steamdeck.  When the moonlight connection is terminated, roll back these changes and restore the screens to their default resolution and state.</p>
+<p>When you initiate a connection to sunshine from moonlight on the steamdeck the system should automatically configure the windows PC. This includes disabling secondary displays and adjusting the resolution to match the steamdeck.  When the moonlight connection is terminated, roll back these changes and restore the screens to their default resolution and state.</p>
 <h2>Prereqs</h2>
 <p>There's a few things we are going to take for granted here to start.</p>
 <ul>
-<li>You (the reader) have an up to date copy of sunshine installed on your desktop of choice<ul>
-<li>The basics of this are covered in the sunshine docs: https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/installation.html</li>
-</ul>
-</li>
-<li>You have a copy of moonlight installed and configured as a tile on your steamdeck<ul>
-<li>This is covered extensively in blog posts and youtube videos the world over, this was the first google hit for me and looks to be a solid explanation: https://pimylifeup.com/steam-deck-moonlight/</li>
-</ul>
-</li>
-<li>A copy of NirSoft's <a href="https://www.nirsoft.net/utils/multi_monitor_tool.html">Multi-Monitor Tool</a>.<ul>
-<li>This should be placed somewhere you can easily locate and reliably find.  I put it inside a folder simply labeled 'programs' in my home directory</li>
-</ul>
-</li>
+<li>You (the reader) have an up to date copy of sunshine installed on your desktop of choice.</li>
+<li>The basics of this are covered in the <a href="https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/installation.html">sunshine docs</a>.</li>
+<li>You have a copy of moonlight installed and configured as a tile on your steamdeck.</li>
+<li>This is covered extensively in blog posts and YouTube videos the world over, <a href="https://pimylifeup.com/steam-deck-moonlight/">this was the first google hit for me and looks to be a solid explanation</a>.</li>
+<li>A copy of NirSoft's <a href="https://www.nirsoft.net/utils/multi_monitor_tool.html">Multi-Monitor Tool</a>.</li>
+<li>This should be placed somewhere you can easily locate and reliably find.  I put it inside a folder simply labeled 'programs' in my home directory.</li>
 <li>A piece of software you want to make work by streaming to your steamdeck, I'll be using <a href="https://playnite.link/">Playnite</a> as it lets me aggregate all my desktop game stores into one library interface.</li>
 </ul>
+<h2>Details to have in front of you before you start</h2>
+<ul>
+<li>Full drive path to your program folder, for example: <code>C:\Users\&lt;username&gt;\Programs\</code></li>
+<li>Additionally make note of where MultiMonitorTool is, ie: <code>C:\Users\&lt;username&gt;\Programs\multimonitortool-x64\</code></li>
+<li>How many monitors you have, for example: <code>3</code></li>
+<li>The full path to the executable you want to run, for example for playnite: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.Fullscreenapp.exe</code></li>
+<li>The working directory you want the program to run in, some applications don't care but playnite does so: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code></li>
+</ul>
 <h1>HowTo</h1>
+<p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we'll use a set of batch scripts to swap the two modes back and forth automatically.</p>
+<h2>Capture Monitor Configurations</h2>
+<p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the multimonitortool gui and you'll see a window similar to below.</p>
+<p><img alt="multimonitor all screens enabled" src="/images/2023-multimon-all.png"></p>
+<h2>Start Script</h2>
+<div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">: disable secondary monitors and switch main monitor to steamdeck native resolution</span>
+<span class="p">:</span><span class="c1">:</span>
+<span class="p">@</span><span class="k">ECHO</span> OFF
+<span class="k">cd</span> C:\Users\<span class="p">&lt;</span>username<span class="p">&gt;</span>\Programs\multimonitortool-x64
+.\MultiMonitorTool.exe /disable 2 3
+.\MultiMonitorTool.exe /LoadConfig ./steamdeck-native.cfg
+timeout /t 2
+</code></pre></div>
+
+
+<h2>Exit Script</h2>
+<div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">:reset the monitor configuration to default</span>
+<span class="p">:</span><span class="c1">:</span>
+<span class="p">@</span><span class="k">ECHO</span> OFF
+<span class="k">cd</span> C:\Users\<span class="p">&lt;</span>username<span class="p">&gt;</span>\Programs\multimonitortool-x64
+.\MultiMonitorTool.exe /LoadConfig ./default.cfg
+.\MultiMonitorTool.exe /LoadConfig ./default.cfg
+</code></pre></div>
+
+
+<h2>Putting it Together in an Application Entry</h2>
       </div>
       <div class="back-to-top">
           <a href="#top">back to top</a>
