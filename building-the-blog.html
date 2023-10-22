@@ -235,9 +235,9 @@
         <div>
             <p>It's been a while since I've spent any serious time looking at blogging, static site generation, and the github pages system so it was no surprise that my knowledge was more than a little out of date.  What was surprising however was how much information online seems to be equally out of date at this point a state that was a little disappointing but not overtly surprising.  It's not like github shouts from the rooftop when they change things quietly in the background, especially when those old approaches still work.  </p>
 <p>So this post will serve somewhat as modern documentation for how github user pages can be setup and automated to use <a href="https://blog.getpelican.com/">Pelican</a> to generate a blog (like this one).</p>
-<h2>How things used to work</h2>
+<h2 id="how-things-used-to-work">How things used to work</h2>
 <p>Originally what you would do is create a public repository named <code>&lt;githubuser&gt;.github.io</code>.  From here the <code>main</code> or <code>master</code> branch in the repository would be your raw content, so in pelican a folder full of markdown files.  From there you'd generate an output folder, that typically you would not capture in git, and merge that into a separate branch named <code>gh-pages</code>.  This felt like creating some sort of weird hell alternate file stream based approach and was generally kinda difficult to wrap your head around.  The alternative was brute forcing it by simply checking out two different copies of the same repo in separate folders, then just copy/pasting from one to the other and pushing.  This works but at that point, why have them be the same repo?  I suspect this is something github realized somewhere along the way because that's how you do it now!</p>
-<h2>Structure</h2>
+<h2 id="structure">Structure</h2>
 <p>Github has simplified things a bit, now you can just put your websites static folder in the main branch (<code>main</code> or <code>master</code> depending on repo settings and age).  This allows us some flexibility, the core of this blog is published from a private repository allowing me to not exposed my pelican configs, comment cruft, in dev theme files, and other details around how pelican sites are published in the public repository that serves out what you are reading.</p>
 <p>To get started I made a conda environment to use for local test builds, it's overkill but miniconda envs are my default approach, to this we need to add the following packages (this is the contents of my <code>requirements.txt</code> file, but using the latest versions should work; you might not even need all of this):</p>
 <div class="highlight"><pre><span></span><code><span class="na">blinker</span><span class="o">=</span><span class="s">=1.4</span>
@@ -262,7 +262,7 @@
 
 
 <p>Once the above is added to git it can be committed and pushed up to the private repository.  This sets up the base you need to build on going forward.</p>
-<h3>Custom URL</h3>
+<h3 id="custom-url">Custom URL</h3>
 <p>If using a custom url (like say <code>blog.shadowgears.com</code>) you'll need to do a few things:</p>
 <p>1) make a folder inside your <code>content</code> folder named <code>extra</code> and add a file named <code>CNAME</code> with the custom domain name in it, that will handle the CNAME id file required by <a href="https://docs.github.com/en/github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site">github pages</a>.<br>
 2) Add the following to your <code>pelicanconf.py</code> file:</p>
@@ -277,7 +277,7 @@
 
 
 <p>Adding the above will ensure that the file <code>CNAME</code> is placed in the root of your output folder every time the site is generated so even if it's removed by accident it'll be re-instated on the next publish.  Additionally setting the siteurl will make sure all internal links on the site point to the correct location when the site is published.</p>
-<h2>Auto Publishing Posts</h2>
+<h2 id="auto-publishing-posts">Auto Publishing Posts</h2>
 <p>At this point you can publish the content, using the <code>make publish</code> command will push a full processed copy of the content folder to <code>output</code>, and for some that's probably anywhere between good and fine. But that's not something I want to have to remember every time I write something new, so the next step is to solve automatic publishing!  We'll be pushing from our private repository to the public one so we are going to need a <a href="https://github.com/settings/tokens">personal access token</a> with the <code>repo-&gt;public repo</code> privileges, I've tested no additional privileges are required.  Make sure you note this key value down somewhere you can copy / paste it.</p>
 <p>The next step is going to be adding this as a secret attached to your private repository, this is done in the specific private repos <code>settings-&gt;secrets</code>, simply add a new secret named <code>APITOKENPUBLISH</code> and paste the contents of the generated token above in as the value. This will be used by the github action we'll be setting up next.</p>
 <p>Now that we've got the basics needed to make this work all that's required is adding the automatic workflow to the private repository.  This will be broken into a few steps:</p>
@@ -285,7 +285,7 @@
 2) Run <code>make publish</code> on the contents of the repository.<br>
 3) Clone the public repository into a separate location, copy the output of <code>make publish</code> into it, and push it back out.  </p>
 <p>To get this started we'll need a new set of folders at the root of the repository named <code>.github/workflows</code>, inside here is where we'll place the rest of the magic.  Once that folder is in-place we are going to need a yaml file inside it, this can be named whatever but I'm going for <code>pelican-publish.yml</code>.  This is going to be a <a href="https://docs.github.com/en/actions/quickstart">github actions</a> file and is the reason we made that secret entry further up the post.  A full copy of the action file is included at the end of this post, the following sections break down the sub parts.</p>
-<h3>Setup the Environment</h3>
+<h3 id="setup-the-environment">Setup the Environment</h3>
 <p>This initial segment sets up some rules and the python environment.  We'll be naming the action <code>Pelican-Publisher</code>, restricting it to only run on pushes to our source repository, and instructing it to run on ubuntu.  This last part we could probably make something lighter weight just so it runs a little faster (this process is slower than I'd like) but for simplicity and compatibility with most published documentation and actions I stuck with ubuntu here.  The last bits of this step check out the private repository and creates a python environment </p>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pelican-Publisher</span>
 
@@ -313,7 +313,7 @@
 </code></pre></div>
 
 
-<h3>Build the Website</h3>
+<h3 id="build-the-website">Build the Website</h3>
 <p>This sounds like it should be long or complicated, it's neither.  If test <code>make publish</code> commands worked on the local system the adding this to the above will build the website fresh:</p>
 <div class="highlight"><pre><span></span><code>      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Build Site</span>
         <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
@@ -322,7 +322,7 @@
 
 
 <p>If this doesn't work, there's probably an issue with your local <code>make publish</code> or with your requirements file, verify those are correct then revisit this.</p>
-<h3>Publish the Website</h3>
+<h3 id="publish-the-website">Publish the Website</h3>
 <p>The actual complicated part of this is here, we'll be making use of user <a href="https://github.com/cpina">cpina</a>'s <a href="https://github.com/cpina/github-action-push-to-another-repository">github-action-push-to-another-repository</a> published action to do the heavy lifting here.  It'll require a few quick inputs, mostly involving your github ID or the afore mentioned API key secret.</p>
 <div class="highlight"><pre><span></span><code>      <span class="c1"># push generated site to public repo</span>
       <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pushes to another repository</span>
@@ -342,7 +342,7 @@
 
 <p>This action does a few things. First it checks out the target repository, in this case our public <code>&lt;username&gt;.github.io</code> repository. Then it makes a new folder and copies just the <code>.git</code> subfolder from the checked out repository into there. Over top of this it copies the contents of the folder <code>output</code>, and finally issues a commit and push of this newly minted git repository.</p>
 <p>Doing it this way is important in that it ensures you have a completely clean copy of the generated output as your new website version instead of possibly missing an article deletion or restructuring that doesn't get tracked properly.</p>
-<h3>Putting it all together</h3>
+<h3 id="putting-it-all-together">Putting it all together</h3>
 <p>This is the full action file ready to be copy/pasted and updated to your own settings.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pelican-Publisher</span>
 
@@ -386,9 +386,9 @@
 </code></pre></div>
 
 
-<h2>Adding Content</h2>
+<h2 id="adding-content">Adding Content</h2>
 <p>In the process of writing this article I've gone from using VSCode to write it, to moving to ZETTLR, and then switching back to vscode for a few reasons.  Initially when I was developing this article in vscode I'd attempted to install a spell checker to make sure my writing is at least spelled right if not you know, comprehensible.  Unfortunately the recommended spell checker just seemed to freak out and highlight the entire markdown file as spelled incorrectly.  So I removed that addon and migrated over to editing in a zettlr window, this has some upsides I really liked. The spell checking is sane, rendering markdown 'live' as you edit it works incredibly well.  Unfortunately the folder handling is rather clunky, zettlr has opinions about how things are organized and they don't mesh with how I work as well as I thought.  Additionally the linux version seems to have some serious keyboard shortcut collisions that I didn't have the willpower to fix; when you are trying to paste with <code>ctrl+v</code> and it instead keeps warping you to the bottom of the page for some reason, it's time to stop fighting a tool not setup to do what you want. So I'm back to using vscode as my editor, however in the mean time I've found a different spellchecker for vscode that acts more sanely.  The <a href="https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker">Code Spell Checker</a> by Street Side Software works more or less how I'd expect. The only nagging point currently is having to hit <code>ctrl+.</code> instead of right clicking on a misspelled word in order to fix it.  All in all, it works and that's what's important here.</p>
-<h2>Notes</h2>
+<h2 id="notes">Notes</h2>
 <p>Below are notes and references used to work out the details above.</p>
 <p>This blog is built and published using the <a href="https://docs.getpelican.com/en/3.6.3/index.html">Pelican static site generator system</a> in a two stage setup.</p>
 <p>reference material on the current state of github pages:</p>

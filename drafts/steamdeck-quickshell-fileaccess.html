@@ -236,7 +236,7 @@
         <!-- Article -->
         <div>
             <p>Accessing a steam deck remotely can be useful for a variety of reasons, adding files to the SD card, modifying OS settings, general purpose computing, and viewing error logs to name a few. And while Valve may not be shouting it from the roof top, they've made this incredibly easy to do as long as you've got a separate computer to work from.  This is done via the <a href="https://partner.steamgames.com/doc/steamdeck/loadgames#3">SteamOS Devkit Client</a> application published by valve and few additional details just to make things work as well as possible.  This software allows you to pair a steam deck to a computer for the purposes of remote control and management; you can change the OS mode, take screen shots, transfer files, access a remote shell, and monitor system performance on a steamdeck once properly configured.  The software is meant to be used by game devs that would like to load their games onto a steamdeck directly, but can easily do double duty to simplify access for non-devs.</p>
-<h1>Pre-Reqs</h1>
+<h1 id="pre-reqs">Pre-Reqs</h1>
 <p>Before you can remote into the device you will need some specific software installed to facilitate the setup.</p>
 <ul>
 <li>The <a href="https://partner.steamgames.com/doc/steamdeck/loadgames#3">SteamOS Devkit Client</a> software needs to be installed through the Steam Client.</li>
@@ -248,16 +248,16 @@
 <li>To simplify this setting the steamdeck to a permanent IP will simplify this.</li>
 </ul>
 <p>With the above in place there's a few more steps to get everything working.</p>
-<h1>Pairing</h1>
+<h1 id="pairing">Pairing</h1>
 <p>Depending on what os you are using there's a few different ways this can go. Starting with launching the devtools application.</p>
-<h2>Starting the devtools</h2>
+<h2 id="starting-the-devtools">Starting the devtools</h2>
 <p>I've unfortunately had somewhat mixed results with this part.  In windows you can simply navigate to <code>SteamOS Devkit Client</code> in your software library and hit the Launch button.  This has worked as expected each time I've launched it.  However on Linux it can get somewhat more finicky.</p>
 <p>While you can install the application through steam on linux, for me at least it does not launch successfully from the steam client (fedora 36, kde, wayland) however it will happily launch from a command line.  Making this work mostly comes down to knowing where the steam programs are installed on your device, typically this is a hidden folder in your home directory as that is the default.  Assuming you are in your home directory and have steam installed using it's defaults this command or some similar variation of it will get you up and running: <code>python3.10 ./.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/SteamOSDevkitClient/linux-client/devkit-gui-cp310.pyz</code></p>
 <p>Either way, you should see this screen pop up on your laptop/desktop:</p>
 <p><img alt="Blank steam dev client pane" src="https://blog.shadowgears.com/drafts/steamos-dev-blank.png"></p>
-<h2>Enabling pairing on the steamdeck</h2>
+<h2 id="enabling-pairing-on-the-steamdeck">Enabling pairing on the steamdeck</h2>
 <p>This is actually already enabled out of the box on the steamdeck, it's more a question of finding where it lives than anything.  If you press the <code>steam</code> button and scroll all the way down to the bottom of the menu there is a <code>Developer</code> pane available.  The third button down from the top of this pane will put the device in to pairing mode.  Once the device in in pairing mode it should show up automatically in the steam dev kit client.  If not and you've assigned a permanent IP address to the device, simply type into the space that says <code>Connect to Steam Deck by IP</code> and it should connect immediately.</p>
-<h1>Conclusion</h1>
+<h1 id="conclusion">Conclusion</h1>
         </div>
 
         <!-- Neighbors -->
