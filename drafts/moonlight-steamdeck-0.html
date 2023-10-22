@@ -145,7 +145,16 @@ timeout /t 2
 
 
 <h2>Putting it Together in an Application Entry</h2>
-<p>To get started I would make a new application entry for this, while it's theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that's out of scope for this discussion. Naming the new application entry something that makes it clear it's a SteamDeck config will help make things obvious on the client side.  I went with simply <code>Playnite - SD</code>. </p>
+<p>To get started I would make a new application entry for this, while it's theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that's out of scope for this discussion. Naming the new application entry something that makes it clear it's a SteamDeck config will help make things obvious on the client side.  I went with simply <code>Playnite - SD</code>.</p>
+<p>In this new application entry add the full path to your <code>sd-native.bat</code> file to the first entry in the <code>Do Command</code> column. In the neighboring column under <code>Undo Command</code> place the full path to the <code>default-monitor-config.bat</code> file.</p>
+<p>For Playnite specifically it's a good idea to add two additional <code>Undo Command</code> entries of <code>taskkill /f /im Playnite.DesktopApp.exe</code> and <code>taskkill /f /im Playnite.FullscreenApp.exe</code>.  Adding these ensures terminating the application entry also kills Playnite.</p>
+<p>Under the <code>Command</code> entry further down the page you will need to add the path to Playnite's main executable, this is typically <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.FullscreenApp.exe</code>, and you'll want to set the entry <code>Working Directory</code> to simply <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code>.</p>
+<p>At this point you are done, the setup should be ready to test out and stream from.</p>
+<h1>Areas Of Improvement</h1>
+<ul>
+<li>Currently if something goes pear shaped killing the playnite session will not terminate the underlying application that was launched by it.</li>
+<li>The script for turning off secondary monitors can fail if the systems graphics drivers have been updated but the system has not been rebooted; the most direct work around is to simply reboot after these kinds of updates.</li>
+</ul>
       </div>
       <div class="back-to-top">
           <a href="#top">back to top</a>
