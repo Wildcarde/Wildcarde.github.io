@@ -102,37 +102,50 @@
 <h1>HowTo</h1>
 <p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we'll use a set of batch scripts to swap the two modes back and forth automatically. You could make this more robust using a proper scripting language like powershell or python but for our purposes here a brute force batch file is sufficient.</p>
 <h2>Capture Monitor Configurations</h2>
-<p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the multimonitortool GUI and you'll see a window similar to below.</p>
-<p><img alt="multimonitor all screens enabled" src="https://blog.shadowgears.com/drafts/2023-multimon-all.png"></p>
+<p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the MultiMonitorTool GUI and you'll see a window similar to below.</p>
+<p><img alt="MultiMonitorTool All Screens Enabled" src="https://blog.shadowgears.com/drafts/2023-multimon-all.png"></p>
 <p>Once everything is configured as desired, simply go to the <code>File</code> menu button and select <code>Save Monitors Configuration</code>.  Place this file somewhere easily located and named something sensible. In my case I chose to simply put this in the folder for MultiMonitorTool and name it <code>default.cfg</code> as this makes the scripts below easier.</p>
 <p>After this is complete, reconfigure the screens to be setup as you would like them to be for the steamdeck or other streaming target. For the steamdeck, the native resolution is <code>1280x800</code>; so I've disabled the right and left screens on my system and set the primary screens resolution to <code>1280x800</code>.</p>
 <p>Once this is complete, check that the changes are reflected in MultiMonitorTool's GUI (as below) and save this new configuration in the same place as the first.  I named this file simply <code>steamdeck-native.cfg</code> so it's easy to find.</p>
 <p><img alt="MultiMonitorTool Steamdeck Native Config" src="https://blog.shadowgears.com/drafts/2023-multimon-single.png"></p>
 <h2>Start Script</h2>
+<p>This startup script is invoked before launching the playnite executable, you'll need to make a copy of the script below on your local machine. This can be as simply as copying this and pasting it into notepad. This script will turn off your secondary screens and force the resolution settings expected to the primary monitor by invoking the related config file.</p>
+<p><em>Note:</em> You will need to update the <code>cd</code> entry to where your MultiMonitorTool executable is located.</p>
+<p><code>sd-native.bat:</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">: disable secondary monitors and switch main monitor to steamdeck native resolution</span>
 <span class="p">:</span><span class="c1">:</span>
 <span class="p">@</span><span class="k">ECHO</span> OFF
 <span class="p">:</span><span class="c1">: update working directory to location of multi monitor tool software.</span>
 <span class="k">cd</span> C:\Users\<span class="p">&lt;</span>username<span class="p">&gt;</span>\Programs\multimonitortool-x64
-<span class="p">:</span><span class="c1">: toggle off secondary displays</span>
+<span class="p">:</span><span class="c1">: toggle off secondary displays; if you have more than 3 displays,</span>
+<span class="p">:</span><span class="c1">: add additional display indexes below to turn off all screens except the primary.</span>
 .\MultiMonitorTool.exe /disable 2 3
-<span class="p">:</span><span class="c1">: load desired steamdeck compatible configuration</span>
+<span class="p">:</span><span class="c1">: load steamdeck compatible configuration file, if you used a different file name</span>
+<span class="p">:</span><span class="c1">: you will need to use that config file name here.</span>
 .\MultiMonitorTool.exe /LoadConfig ./steamdeck-native.cfg
+<span class="p">:</span><span class="c1">: these changes tend to take a few seconds and we don&#39;t want anything to launch before hand</span>
+<span class="p">:</span><span class="c1">: so just a quick pause so it doesn&#39;t launch while things are changing.</span>
 timeout /t 2
 </code></pre></div>
 
 
 <h2>Exit Script</h2>
+<p>This script is functionally the inversion of the above script and is meant to run when exiting a sunshine application. This will forcibly restore the default screen configuration but has some subtleties to be aware of. The <code>/LoadConfig</code> flag seems to have some issues with restoring several screens at once, however it can simply be run multiple times to force the system to enable all screens. As such you will need to include the line <code>.\MultiMonitorTool.exe /LoadConfig ./default.cfg</code> once for each monitor you need to re-activate.</p>
+<p><em>Note:</em> As above you will need to update the <code>cd</code> command to the appropriate location for your system.</p>
+<p><code>default-monitor-config.bat</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">:reset the monitor configuration to default</span>
 <span class="p">:</span><span class="c1">:</span>
 <span class="p">@</span><span class="k">ECHO</span> OFF
+<span class="p">:</span><span class="c1">: update working directory to location of multi monitor tool software.</span>
 <span class="k">cd</span> C:\Users\<span class="p">&lt;</span>username<span class="p">&gt;</span>\Programs\multimonitortool-x64
+<span class="p">:</span><span class="c1">: re-assert default screen configuration</span>
 .\MultiMonitorTool.exe /LoadConfig ./default.cfg
 .\MultiMonitorTool.exe /LoadConfig ./default.cfg
 </code></pre></div>
 
 
 <h2>Putting it Together in an Application Entry</h2>
+<p>To get started I would make a new application entry for this, while it's theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that's out of scope for this discussion. Naming the new application entry something that makes it clear it's a SteamDeck config will help make things obvious on the client side.  I went with simply <code>Playnite - SD</code>. </p>
       </div>
       <div class="back-to-top">
           <a href="#top">back to top</a>
