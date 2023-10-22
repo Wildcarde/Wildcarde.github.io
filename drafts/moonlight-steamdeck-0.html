@@ -233,7 +233,25 @@
 
         <!-- Article -->
         <div>
-            <h1 id="the-problem">The Problem</h1>
+            <div class="toc">
+<ul>
+<li><a href="#the-problem">The Problem</a></li>
+<li><a href="#the-goal">The Goal</a><ul>
+<li><a href="#prereqs">Prereqs</a></li>
+<li><a href="#details-to-have-in-front-of-you-before-you-start">Details to have in front of you before you start</a></li>
+</ul>
+</li>
+<li><a href="#howto">HowTo</a><ul>
+<li><a href="#capture-monitor-configurations">Capture Monitor Configurations</a></li>
+<li><a href="#start-script">Start Script</a></li>
+<li><a href="#exit-script">Exit Script</a></li>
+<li><a href="#putting-it-together-in-an-application-entry">Putting it Together in an Application Entry</a></li>
+</ul>
+</li>
+<li><a href="#areas-of-improvement">Areas Of Improvement</a></li>
+</ul>
+</div>
+<h1 id="the-problem">The Problem</h1>
 <p>While Steam streaming and Sunshine are both pretty straight forward to configure if you don't ask much from them, getting them to play nice with a 3 screen computer setup is a relatively poor experience.  This is doubly true if the main screen in use is an ultra-wide as these tools do not change the aspect ratio or screen behaviors when streaming out of the box. So when you have a screen setup that looks like a Tie Fighter it is a less than ideal experience between sunshine and moonlight. Lets solve that!</p>
 <h1 id="the-goal">The Goal</h1>
 <p>When you initiate a connection to sunshine from moonlight on the steamdeck the system should automatically configure the windows PC. This includes disabling secondary displays and adjusting the resolution to match the steamdeck.  When the moonlight connection is terminated, roll back these changes and restore the screens to their default resolution and state.</p>
