@@ -13,11 +13,11 @@
 
         <!-- Default metadata -->
     <meta name="author" content="Garrett McGrath" />
-    <meta name="description" content="An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client." />
+    <meta name="description" content="An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client." />
     <meta name="keywords" content="deployment, blog">
 <meta property="og:site_name" content="Putting the Pieces Together" />
-<meta property="og:title" content="Setting up Moonlight and Sunshine to Stream to Steamdeck" />
-<meta property="og:description" content="An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client." />
+<meta property="og:title" content="Setting up Moonlight and Sunshine to Stream to Steamdeck" />
+<meta property="og:description" content="An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client." />
 <meta property="og:locale" content="en_US" />
 <meta property="og:url" content="https://blog.shadowgears.com/drafts/moonlight-steamdeck-0.html" />
 <meta property="og:type" content="article" />
@@ -34,7 +34,7 @@
 
         <!-- Title -->
         <title>
-    Setting up Moonlight and Sunshine to Stream to Steamdeck &ndash; Putting the Pieces Together
+    Setting up Moonlight and Sunshine to Stream to Steamdeck &ndash; Putting the Pieces Together
         </title>
         
         <!-- Icon -->
@@ -61,6 +61,7 @@
         <!--
         <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
         -->
+            <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.css">
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/pygment/friendly.min.css">
         <!--
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/admonition.min.css">
@@ -198,8 +199,8 @@
         <!-- Header -->
         <header class="bg-dark text-light shadow-sm pt-3 pb-2">
 	<div class="container">
-		<h3 id="moonlight-steamdeck-0">Setting up Moonlight and Sunshine to Stream to Steamdeck</h3>
-		<p style="font-size:larger;"><p>An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client.</p></p>
+		<h3 id="moonlight-steamdeck-0">Setting up Moonlight and Sunshine to Stream to&nbsp;Steamdeck</h3>
+		<p style="font-size:larger;"><p>An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight&nbsp;client.</p></p>
         <div class="row mx-auto mt-3">
             <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
                 <a href="https://blog.shadowgears.com/author/garrett-mcgrath.html" class="card-link">Garrett McGrath</a>
@@ -209,7 +210,6 @@
                             Thu 14 September 2023
                     </span>
                 </span>
-                    <span class="card-link text-secondary" title="~1262 words">6 mins</span>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
                 <a class="badge badge-success" href="https://blog.shadowgears.com/category/howto.html">howto</a>
@@ -227,65 +227,47 @@
 
                     <!-- Content -->
     <!-- 2 columns layout -->
-    <!-- single column layout -->
-        <!-- Sharing -->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-10">
 
-        <!-- Share post -->
+                <!-- Sharing -->
 
-        <!-- Article -->
-        <div>
-            <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#the-problem">The Problem</a></li>
-<li><a href="#the-goal">The Goal</a><ul>
-<li><a href="#prereqs">Prereqs</a></li>
-<li><a href="#details-to-have-in-front-of-you-before-you-start">Details to have in front of you before you start</a></li>
-</ul>
-</li>
-<li><a href="#howto">HowTo</a><ul>
-<li><a href="#capture-monitor-configurations">Capture Monitor Configurations</a></li>
-<li><a href="#start-script">Start Script</a></li>
-<li><a href="#exit-script">Exit Script</a></li>
-<li><a href="#putting-it-together-in-an-application-entry">Putting it Together in an Application Entry</a></li>
-</ul>
-</li>
-<li><a href="#areas-of-improvement">Areas Of Improvement</a></li>
-</ul>
-</div>
-<h1 id="the-problem">The Problem</h1>
-<p>While Steam streaming and Sunshine are both pretty straight forward to configure if you don't ask much from them, getting them to play nice with a 3 screen computer setup is a relatively poor experience.  This is doubly true if the main screen in use is an ultra-wide as these tools do not change the aspect ratio or screen behaviors when streaming out of the box. So when you have a screen setup that looks like a Tie Fighter it is a less than ideal experience between sunshine and moonlight. Lets solve that!</p>
-<h1 id="the-goal">The Goal</h1>
-<p>When you initiate a connection to sunshine from moonlight on the steamdeck the system should automatically configure the windows PC. This includes disabling secondary displays and adjusting the resolution to match the steamdeck.  When the moonlight connection is terminated, roll back these changes and restore the screens to their default resolution and state.</p>
+                <!-- Article -->
+                <h1 id="the-problem">The&nbsp;Problem</h1>
+<p>While Steam streaming and Sunshine are both pretty straight forward to configure if you don&#8217;t ask much from them, getting them to play nice with a 3 screen computer setup is a relatively poor experience.  This is doubly true if the main screen in use is an ultra-wide as these tools do not change the aspect ratio or screen behaviors when streaming out of the box. So when you have a screen setup that looks like a Tie Fighter it is a less than ideal experience between sunshine and moonlight. Lets solve&nbsp;that!</p>
+<h1 id="the-goal">The&nbsp;Goal</h1>
+<p>When you initiate a connection to sunshine from moonlight on the steamdeck the system should automatically configure the windows <span class="caps">PC</span>. This includes disabling secondary displays and adjusting the resolution to match the steamdeck.  When the moonlight connection is terminated, roll back these changes and restore the screens to their default resolution and&nbsp;state.</p>
 <h2 id="prereqs">Prereqs</h2>
-<p>There's a few things we are going to take for granted here to start.</p>
+<p>There&#8217;s a few things we are going to take for granted here to&nbsp;start.</p>
 <ul>
-<li>You (the reader) have an up to date copy of sunshine installed on your desktop of choice.</li>
+<li>You (the reader) have an up to date copy of sunshine installed on your desktop of&nbsp;choice.</li>
 <li>The basics of this are covered in the <a href="https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/installation.html">sunshine docs</a>.</li>
-<li>You have a copy of moonlight installed and configured as a tile on your steamdeck.</li>
+<li>You have a copy of moonlight installed and configured as a tile on your&nbsp;steamdeck.</li>
 <li>This is covered extensively in blog posts and YouTube videos the world over, <a href="https://pimylifeup.com/steam-deck-moonlight/">this was the first google hit for me and looks to be a solid explanation</a>.</li>
-<li>A copy of NirSoft's <a href="https://www.nirsoft.net/utils/multi_monitor_tool.html">Multi-Monitor Tool</a>.</li>
-<li>This should be placed somewhere you can easily locate and reliably find.  I put it inside a folder simply labeled 'programs' in my home directory.</li>
-<li>A piece of software you want to make work by streaming to your steamdeck, I'll be using <a href="https://playnite.link/">Playnite</a> as it lets me aggregate all my desktop game stores into one library interface.</li>
+<li>A copy of NirSoft&#8217;s <a href="https://www.nirsoft.net/utils/multi_monitor_tool.html">Multi-Monitor Tool</a>.</li>
+<li>This should be placed somewhere you can easily locate and reliably find.  I put it inside a folder simply labeled &#8216;programs&#8217; in my home&nbsp;directory.</li>
+<li>A piece of software you want to make work by streaming to your steamdeck, I&#8217;ll be using <a href="https://playnite.link/">Playnite</a> as it lets me aggregate all my desktop game stores into one library&nbsp;interface.</li>
 </ul>
-<h2 id="details-to-have-in-front-of-you-before-you-start">Details to have in front of you before you start</h2>
+<h2 id="details-to-have-in-front-of-you-before-you-start">Details to have in front of you before you&nbsp;start</h2>
 <ul>
 <li>Full drive path to your program folder, for example: <code>C:\Users\&lt;username&gt;\Programs\</code></li>
 <li>Additionally make note of where MultiMonitorTool is, ie: <code>C:\Users\&lt;username&gt;\Programs\multimonitortool-x64\</code></li>
 <li>How many monitors you have, for example: <code>3</code></li>
 <li>The full path to the executable you want to run, for example for Playnite: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.Fullscreenapp.exe</code></li>
-<li>The working directory you want the program to run in, some applications don't care but Playnite does so: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code></li>
+<li>The working directory you want the program to run in, some applications don&#8217;t care but Playnite does so: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code></li>
 </ul>
 <h1 id="howto">HowTo</h1>
-<p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we'll use a set of batch scripts to swap the two modes back and forth automatically. You could make this more robust using a proper scripting language like powershell or python but for our purposes here a brute force batch file is sufficient.</p>
-<h2 id="capture-monitor-configurations">Capture Monitor Configurations</h2>
-<p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the MultiMonitorTool GUI and you'll see a window similar to below.</p>
+<p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we&#8217;ll use a set of batch scripts to swap the two modes back and forth automatically. You could make this more robust using a proper scripting language like powershell or python but for our purposes here a brute force batch file is&nbsp;sufficient.</p>
+<h2 id="capture-monitor-configurations">Capture Monitor&nbsp;Configurations</h2>
+<p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the MultiMonitorTool <span class="caps">GUI</span> and you&#8217;ll see a window similar to&nbsp;below.</p>
 <p><img alt="MultiMonitorTool All Screens Enabled" src="https://blog.shadowgears.com/drafts/2023-multimon-all.png"></p>
-<p>Once everything is configured as desired, simply go to the <code>File</code> menu button and select <code>Save Monitors Configuration</code>.  Place this file somewhere easily located and named something sensible. In my case I chose to simply put this in the folder for MultiMonitorTool and name it <code>default.cfg</code> as this makes the scripts below easier.</p>
-<p>After this is complete, reconfigure the screens to be setup as you would like them to be for the Steamdeck or other streaming target. For the Steamdeck, the native resolution is <code>1280x800</code>; so I've disabled the right and left screens on my system and set the primary screens resolution to <code>1280x800</code>.</p>
-<p>Once this is complete, check that the changes are reflected in MultiMonitorTool's GUI (as below) and save this new configuration in the same place as the first.  I named this file simply <code>steamdeck-native.cfg</code> so it's easy to find.</p>
+<p>Once everything is configured as desired, simply go to the <code>File</code> menu button and select <code>Save Monitors Configuration</code>.  Place this file somewhere easily located and named something sensible. In my case I chose to simply put this in the folder for MultiMonitorTool and name it <code>default.cfg</code> as this makes the scripts below&nbsp;easier.</p>
+<p>After this is complete, reconfigure the screens to be setup as you would like them to be for the Steamdeck or other streaming target. For the Steamdeck, the native resolution is <code>1280x800</code>; so I&#8217;ve disabled the right and left screens on my system and set the primary screens resolution to <code>1280x800</code>.</p>
+<p>Once this is complete, check that the changes are reflected in MultiMonitorTool&#8217;s <span class="caps">GUI</span> (as below) and save this new configuration in the same place as the first.  I named this file simply <code>steamdeck-native.cfg</code> so it&#8217;s easy to&nbsp;find.</p>
 <p><img alt="MultiMonitorTool Steamdeck Native Config" src="https://blog.shadowgears.com/drafts/2023-multimon-single.png"></p>
-<h2 id="start-script">Start Script</h2>
-<p>This start-up script is invoked before launching the Playnite executable, you'll need to make a copy of the script below on your local machine. This can be as simply as copying this and pasting it into notepad. This script will turn off your secondary screens and force the resolution settings expected to the primary monitor by invoking the related config file.</p>
-<p><em>Note:</em> You will need to update the <code>cd</code> entry to where your MultiMonitorTool executable is located.</p>
+<h2 id="start-script">Start&nbsp;Script</h2>
+<p>This start-up script is invoked before launching the Playnite executable, you&#8217;ll need to make a copy of the script below on your local machine. This can be as simply as copying this and pasting it into notepad. This script will turn off your secondary screens and force the resolution settings expected to the primary monitor by invoking the related config&nbsp;file.</p>
+<p><em>Note:</em> You will need to update the <code>cd</code> entry to where your MultiMonitorTool executable is&nbsp;located.</p>
 <p><code>sd-native.bat:</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">: disable secondary monitors and switch main monitor to steamdeck native resolution</span>
 <span class="p">:</span><span class="c1">:</span>
@@ -303,9 +285,9 @@
 timeout /t 2
 </code></pre></div>
 
-<h2 id="exit-script">Exit Script</h2>
-<p>This script is functionally the inversion of the above script and is meant to run when exiting a sunshine application. This will forcibly restore the default screen configuration but has some subtleties to be aware of. The <code>/LoadConfig</code> flag seems to have some issues with restoring several screens at once, however it can simply be run multiple times to force the system to enable all screens. As such you will need to include the line <code>.\MultiMonitorTool.exe /LoadConfig ./default.cfg</code> once for each monitor you need to re-activate.</p>
-<p><em>Note:</em> As above you will need to update the <code>cd</code> command to the appropriate location for your system.</p>
+<h2 id="exit-script">Exit&nbsp;Script</h2>
+<p>This script is functionally the inversion of the above script and is meant to run when exiting a sunshine application. This will forcibly restore the default screen configuration but has some subtleties to be aware of. The <code>/LoadConfig</code> flag seems to have some issues with restoring several screens at once, however it can simply be run multiple times to force the system to enable all screens. As such you will need to include the line <code>.\MultiMonitorTool.exe /LoadConfig ./default.cfg</code> once for each monitor you need to&nbsp;re-activate.</p>
+<p><em>Note:</em> As above you will need to update the <code>cd</code> command to the appropriate location for your&nbsp;system.</p>
 <p><code>default-monitor-config.bat</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">:reset the monitor configuration to default</span>
 <span class="p">:</span><span class="c1">:</span>
@@ -317,29 +299,42 @@ timeout /t 2
 .\MultiMonitorTool.exe /LoadConfig ./default.cfg
 </code></pre></div>
 
-<h2 id="putting-it-together-in-an-application-entry">Putting it Together in an Application Entry</h2>
-<p>To get started I would make a new application entry for this, while it's theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that's out of scope for this discussion. Naming the new application entry something that makes it clear it's a SteamDeck config will help make things obvious on the client side.  I went with simply <code>Playnite - SD</code>.</p>
+<h2 id="putting-it-together-in-an-application-entry">Putting it Together in an Application&nbsp;Entry</h2>
+<p>To get started I would make a new application entry for this, while it&#8217;s theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that&#8217;s out of scope for this discussion. Naming the new application entry something that makes it clear it&#8217;s a SteamDeck config will help make things obvious on the client side.  I went with simply <code>Playnite - SD</code>.</p>
 <p>In this new application entry add the full path to your <code>sd-native.bat</code> file to the first entry in the <code>Do Command</code> column. In the neighboring column under <code>Undo Command</code> place the full path to the <code>default-monitor-config.bat</code> file.</p>
-<p>For Playnite specifically it's a good idea to add two additional <code>Undo Command</code> entries of <code>taskkill /f /im Playnite.DesktopApp.exe</code> and <code>taskkill /f /im Playnite.FullscreenApp.exe</code>.  Adding these ensures terminating the application entry also kills Playnite.</p>
-<p>Under the <code>Command</code> entry further down the page you will need to add the path to Playnite's main executable, this is typically <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.FullscreenApp.exe</code>, and you'll want to set the entry <code>Working Directory</code> to simply <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code>.</p>
-<p>At this point you are done, the setup should be ready to test out and stream from.</p>
-<h1 id="areas-of-improvement">Areas Of Improvement</h1>
+<p>For Playnite specifically it&#8217;s a good idea to add two additional <code>Undo Command</code> entries of <code>taskkill /f /im Playnite.DesktopApp.exe</code> and <code>taskkill /f /im Playnite.FullscreenApp.exe</code>.  Adding these ensures terminating the application entry also kills&nbsp;Playnite.</p>
+<p>Under the <code>Command</code> entry further down the page you will need to add the path to Playnite&#8217;s main executable, this is typically <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.FullscreenApp.exe</code>, and you&#8217;ll want to set the entry <code>Working Directory</code> to simply <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code>.</p>
+<p>At this point you are done, the setup should be ready to test out and stream&nbsp;from.</p>
+<h1 id="areas-of-improvement">Areas Of&nbsp;Improvement</h1>
 <ul>
-<li>Currently if something goes pear shaped killing the Playnite session will not terminate the underlying application that was launched by it.</li>
-<li>The script for turning off secondary monitors can fail if the systems graphics drivers have been updated but the system has not been rebooted; the most direct work around is to simply reboot after these kinds of updates.</li>
+<li>Currently if something goes pear shaped killing the Playnite session will not terminate the underlying application that was launched by&nbsp;it.</li>
+<li>The script for turning off secondary monitors can fail if the systems graphics drivers have been updated but the system has not been rebooted; the most direct work around is to simply reboot after these kinds of&nbsp;updates.</li>
 </ul>
+
+                <!-- Neighbors -->
+
+                <!-- Google Adsense -->
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-2 d-none d-md-block small">
+                <div class="sticky-top">
+                    <!-- ToC -->
+                    <nav id="toc" data-toggle="toc" ></nav>
+
+                    <!-- Share post -->
+
+                    <!-- Google Adsense -->
+                </div>
+            </div>
         </div>
-
-        <!-- Neighbors -->
-
-        <!-- Google Adsense -->
 
     <!-- Releated posts -->
         <hr>
         <div>
             <h5>Related posts:</h5>
             <ul>
-                <li><a href="https://blog.shadowgears.com/building-the-blog.html">Building the Blog</a></li>
+                <li><a href="https://blog.shadowgears.com/building-the-blog.html">Building the&nbsp;Blog</a></li>
             </ul>
         </div>
 
@@ -352,7 +347,7 @@ timeout /t 2
     <!-- Footer -->
     <footer class="flex-shrink-0 bg-dark text-light small py-1">
         <div class="container text-center">
-            &copy;  <a href="https://blog.shadowgears.com">Putting the Pieces Together</a> by <a href="https://blog.shadowgears.com/pages/about.html">Garrett McGrath</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            &copy;  <a href="https://blog.shadowgears.com">Putting the Pieces Together</a> by <a href="https://blog.shadowgears.com/pages/about.html">Garrett</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
             <!-- Do not remove below license sentence -->
             License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
         </div>
@@ -370,6 +365,7 @@ timeout /t 2
     <!--
     <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
     -->
+        <script type="text/javascript" src="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.js"></script>
     <script type="text/javascript" src="https://blog.shadowgears.com/theme/style.js"></script>
 
     <!-- Sharing -->
@@ -379,8 +375,8 @@ timeout /t 2
 {
     "@context": "http://schema.org",
     "@type": "BlogPosting",
-    "name": "Setting up Moonlight and Sunshine to Stream to Steamdeck",
-    "headline": "Setting up Moonlight and Sunshine to Stream to Steamdeck",
+    "name": "Setting up Moonlight and Sunshine to Stream to Steamdeck",
+    "headline": "Setting up Moonlight and Sunshine to Stream to Steamdeck",
     "datePublished": "2023-09-14 00:00:00-04:00",
     "dateModified": "",
     "author": {
@@ -390,7 +386,7 @@ timeout /t 2
     },
     "image": "https://blog.shadowgears.com/favicon.ico",
     "url": "https://blog.shadowgears.com/drafts/moonlight-steamdeck-0.html",
-    "description": "An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client."
+    "description": "An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client."
 }
 </script>
     <!-- Disqus count -->

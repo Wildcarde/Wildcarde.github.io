@@ -13,11 +13,11 @@
 
         <!-- Default metadata -->
     <meta name="author" content="Garrett McGrath" />
-    <meta name="description" content="A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and Python." />
+    <meta name="description" content="A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and Python." />
     <meta name="keywords" content="systems, deployment">
 <meta property="og:site_name" content="Putting the Pieces Together" />
-<meta property="og:title" content="Repeatable Cobbler using Docker and Python" />
-<meta property="og:description" content="A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and Python." />
+<meta property="og:title" content="Repeatable Cobbler using Docker and Python" />
+<meta property="og:description" content="A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and Python." />
 <meta property="og:locale" content="en_US" />
 <meta property="og:url" content="https://blog.shadowgears.com/drafts/repeatable-cobbler-docker-python.html" />
 <meta property="og:type" content="article" />
@@ -34,7 +34,7 @@
 
         <!-- Title -->
         <title>
-    Repeatable Cobbler using Docker and Python &ndash; Putting the Pieces Together
+    Repeatable Cobbler using Docker and Python &ndash; Putting the Pieces Together
         </title>
         
         <!-- Icon -->
@@ -198,8 +198,8 @@
         <!-- Header -->
         <header class="bg-dark text-light shadow-sm pt-3 pb-2">
 	<div class="container">
-		<h3 id="repeatable-cobbler-docker-python">Repeatable Cobbler using Docker and Python</h3>
-		<p style="font-size:larger;"><p>A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and Python.</p></p>
+		<h3 id="repeatable-cobbler-docker-python">Repeatable Cobbler using Docker and&nbsp;Python</h3>
+		<p style="font-size:larger;"><p>A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and&nbsp;Python.</p></p>
         <div class="row mx-auto mt-3">
             <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
                 <a href="https://blog.shadowgears.com/author/garrett-mcgrath.html" class="card-link">Garrett McGrath</a>
@@ -209,7 +209,6 @@
                             Sun 14 February 2021
                     </span>
                 </span>
-                    <span class="card-link text-secondary" title="~324 words">2 mins</span>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
                 <a class="badge badge-success" href="https://blog.shadowgears.com/category/howto.html">howto</a>
@@ -234,20 +233,20 @@
 
         <!-- Article -->
         <div>
-            <p>We've been running a new install of cobbler at work for the last few months that was scratched together in my free time meant to simplify running and maintaining the service.  Inspired by our older install managing to corrupt itself so thoroughly that we couldn't properly recover it, as well as the install itself being rather cumbersome to maintain. When designing this setup the goal was an easy to reason about solution that you could spin up as long as you had a few components in the right spaces. It doesn't (currently) do much to hold your hand beyond that but I'm looking to improve it as time permits. The code for this can be found in our teams public <a href="https://github.com/PrincetonUniversity/pni-cobbler">work repository</a>.</p>
-<h2 id="base-layer">Base Layer</h2>
-<p>This is currently built on the centos 7 EPEL variant of cobbler (2.8.5), but work is ongoing to upgrade to the latest stable version of the software. A few API changes have however delayed that, the EPEL version has proven sufficient for our needs in the mean time.</p>
+            <p>We&#8217;ve been running a new install of cobbler at work for the last few months that was scratched together in my free time meant to simplify running and maintaining the service.  Inspired by our older install managing to corrupt itself so thoroughly that we couldn&#8217;t properly recover it, as well as the install itself being rather cumbersome to maintain. When designing this setup the goal was an easy to reason about solution that you could spin up as long as you had a few components in the right spaces. It doesn&#8217;t (currently) do much to hold your hand beyond that but I&#8217;m looking to improve it as time permits. The code for this can be found in our teams public <a href="https://github.com/PrincetonUniversity/pni-cobbler">work repository</a>.</p>
+<h2 id="base-layer">Base&nbsp;Layer</h2>
+<p>This is currently built on the centos 7 <span class="caps">EPEL</span> variant of cobbler (2.8.5), but work is ongoing to upgrade to the latest stable version of the software. A few <span class="caps">API</span> changes have however delayed that, the <span class="caps">EPEL</span> version has proven sufficient for our needs in the mean&nbsp;time.</p>
 <h2 id="assumptions">Assumptions</h2>
-<p>This container is built on a few specific assumptions:</p>
+<p>This container is built on a few specific&nbsp;assumptions:</p>
 <ul>
-<li>there is a free standing dhcp</li>
-<li>the dchp server has the capacity to provide a <code>next-server</code> ip and file to requesting clients</li>
-<li>it does not own the data being presented and nothing loaded into the service will persist across a recreation of the container.</li>
-<li>the end user is familiar with docker and volume mounts and docker-compose</li>
+<li>there is a free standing&nbsp;dhcp</li>
+<li>the dchp server has the capacity to provide a <code>next-server</code> ip and file to requesting&nbsp;clients</li>
+<li>it does not own the data being presented and nothing loaded into the service will persist across a recreation of the&nbsp;container.</li>
+<li>the end user is familiar with docker and volume mounts and&nbsp;docker-compose</li>
 </ul>
 <h2 id="structure">Structure</h2>
-<p>This system is currently built on top of a centos 7 base image. This is primarily due to local familiarity but also because cobblers older rpms sort of 'just work' on centos 7 right now. Layered over that is a supervisord configuration capable of starting cobblers constituent parts and a <code>forklift</code> script for importing flat configuration files into the system and provide the 'repeatable' side of this setup.</p>
-<p>The list of services started as part of this container can be found in the <a href="https://github.com/PrincetonUniversity/pni-cobbler/tree/master/supervisord/conf.d">supervisord/conf.d</a> folder.</p>
+<p>This system is currently built on top of a centos 7 base image. This is primarily due to local familiarity but also because cobblers older rpms sort of &#8216;just work&#8217; on centos 7 right now. Layered over that is a supervisord configuration capable of starting cobblers constituent parts and a <code>forklift</code> script for importing flat configuration files into the system and provide the &#8216;repeatable&#8217; side of this&nbsp;setup.</p>
+<p>The list of services started as part of this container can be found in the <a href="https://github.com/PrincetonUniversity/pni-cobbler/tree/master/supervisord/conf.d">supervisord/conf.d</a>&nbsp;folder.</p>
         </div>
 
         <!-- Neighbors -->
@@ -259,7 +258,7 @@
         <div>
             <h5>Related posts:</h5>
             <ul>
-                <li><a href="https://blog.shadowgears.com/building-the-blog.html">Building the Blog</a></li>
+                <li><a href="https://blog.shadowgears.com/building-the-blog.html">Building the&nbsp;Blog</a></li>
             </ul>
         </div>
 
@@ -272,7 +271,7 @@
     <!-- Footer -->
     <footer class="flex-shrink-0 bg-dark text-light small py-1">
         <div class="container text-center">
-            &copy;  <a href="https://blog.shadowgears.com">Putting the Pieces Together</a> by <a href="https://blog.shadowgears.com/pages/about.html">Garrett McGrath</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            &copy;  <a href="https://blog.shadowgears.com">Putting the Pieces Together</a> by <a href="https://blog.shadowgears.com/pages/about.html">Garrett</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
             <!-- Do not remove below license sentence -->
             License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
         </div>
@@ -299,8 +298,8 @@
 {
     "@context": "http://schema.org",
     "@type": "BlogPosting",
-    "name": "Repeatable Cobbler using Docker and Python",
-    "headline": "Repeatable Cobbler using Docker and Python",
+    "name": "Repeatable Cobbler using Docker and Python",
+    "headline": "Repeatable Cobbler using Docker and Python",
     "datePublished": "2021-02-14 04:22:00-05:00",
     "dateModified": "",
     "author": {
@@ -310,7 +309,7 @@
     },
     "image": "https://blog.shadowgears.com/favicon.ico",
     "url": "https://blog.shadowgears.com/drafts/repeatable-cobbler-docker-python.html",
-    "description": "A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and Python."
+    "description": "A system for setting up and running a repeatable cobbler install with configurations stored in yaml; powered by Docker and Python."
 }
 </script>
     <!-- Disqus count -->
