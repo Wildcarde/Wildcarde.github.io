@@ -12,32 +12,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
         <!-- Default metadata -->
-    <meta name="author" content="Garrett McGrath" />
-    <meta name="description" content="A quick write up on how to load files directly onto the steamdeck and how to get a remote command prompt for more advanced control." />
-    <meta name="keywords" content="steamdeck, remote access, ssh, filezilla">
+    <meta name="author" content="Garrett" />
+    <meta name="description" content="" />
 <meta property="og:site_name" content="Putting the Pieces Together" />
-<meta property="og:title" content="Steam Deck Remote Shell and File Access" />
-<meta property="og:description" content="A quick write up on how to load files directly onto the steamdeck and how to get a remote command prompt for more advanced control." />
+<meta property="og:type" content="blog" />
+<meta property="og:title" content="Putting the Pieces Together" />
+<meta property="og:description" content="" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:url" content="https://blog.shadowgears.com/drafts/steamdeck-quickshell-fileaccess.html" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-10-24 00:00:00-04:00" />
-<meta property="article:modified_time" content="" />
-<meta property="article:author" content="https://blog.shadowgears.com/author/garrett-mcgrath.html">
-<meta property="article:section" content="HowTo" />
-	<meta property="article:tag" content="steamdeck" />
-	<meta property="article:tag" content="remote access" />
-	<meta property="article:tag" content="ssh" />
-	<meta property="article:tag" content="filezilla" />
-	<meta property="og:image" content="https://blog.shadowgears.com/">
-
+<meta property="og:url" content="https://blog.shadowgears.com" />
+<meta property="og:image" content="https://blog.shadowgears.com/">
         <!-- Site Claim -->
 
 
         <!-- Title -->
         <title>
-    Steam Deck Remote Shell and File Access &ndash; Putting the Pieces Together
-        </title>
+Putting the Pieces Together - ssh tag        </title>
         
         <!-- Icon -->
         <link rel="shortcut icon" href="https://blog.shadowgears.com/favicon.ico" type="image/x-icon">
@@ -65,7 +54,6 @@
         <!--
         <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
         -->
-            <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.css">
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/pygment/friendly.min.css">
         <!--
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/admonition.min.css">
@@ -202,28 +190,10 @@
 
         <!-- Header -->
         <header class="bg-dark text-light shadow-sm pt-3 pb-2">
-	<div class="container">
-		<h3 id="steamdeck-quickshell-fileaccess">Steam Deck Remote Shell and File&nbsp;Access</h3>
-		<p style="font-size:larger;"><p>A quick write up on how to load files directly onto the steamdeck and how to get a remote command prompt for more advanced&nbsp;control.</p></p>
-        <div class="row mx-auto mt-3">
-            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
-                <a href="https://blog.shadowgears.com/author/garrett-mcgrath.html" class="card-link">Garrett McGrath</a>
-                <span class="card-link text-success">
-                    <span class="post-date" title="Post date">Tue 24 October 2023</span>
-                    <span class="text-info modified-date" title="Updated date">
-                            Tue 24 October 2023
-                    </span>
-                </span>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
-                <a class="badge badge-success" href="https://blog.shadowgears.com/category/howto.html">howto</a>
-                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/steamdeck.html">steamdeck</a>
-                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/remote-access.html">remote access</a>
-                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/ssh.html">ssh</a>
-                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/filezilla.html">filezilla</a>
-            </div>
-        </div>
-	</div>
+    <div class="container">
+        <h1 id="Putting the Pieces Together">Putting the Pieces Together</h1>
+        <p style="font-size: larger; color: orange;"></p>
+    </div>
         </header>
 
         <!-- Main -->
@@ -232,63 +202,12 @@
                     <!-- Sharing -->
 
                     <!-- Content -->
-    <!-- 2 columns layout -->
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-10">
+    <!-- List of article -->
 
-                <!-- Sharing -->
-
-                <!-- Article -->
-                <p>Accessing a steam deck remotely can be useful for a variety of reasons, adding files to the <span class="caps">SD</span> card, modifying <span class="caps">OS</span> settings, general purpose computing, and viewing error logs to name a few. And while Valve may not be shouting it from the roof top, they&#8217;ve made this incredibly easy to do as long as you&#8217;ve got a separate computer to work from.  This is done via the <a href="https://partner.steamgames.com/doc/steamdeck/loadgames#3">SteamOS Devkit Client</a> application published by valve and few additional details just to make things work as well as possible.  This software allows you to pair a steam deck to a computer for the purposes of remote control and management; you can change the <span class="caps">OS</span> mode, take screen shots, transfer files, access a remote shell, and monitor system performance on a steamdeck once properly configured.  The software is meant to be used by game devs that would like to load their games onto a steamdeck directly, but can easily do double duty to simplify access for&nbsp;non-devs.</p>
-<h1 id="prereqs">Prereqs</h1>
-<p>Before you can remote into the device you will need some specific software installed to facilitate the&nbsp;setup.</p>
-<ul>
-<li>The <a href="https://partner.steamgames.com/doc/steamdeck/loadgames#3">SteamOS Devkit Client</a> software needs to be installed through the Steam&nbsp;Client.</li>
-<li>You can use this link to directly install the client through the steam software: <code>steam://install/943760</code></li>
-<li>note: you do not need the server installer, the steamdeck already has that software&nbsp;pre-loaded.</li>
-<li>The open source file transfer tool <a href="https://filezilla-project.org/">Filezilla</a> will need to be installed on your&nbsp;computer.</li>
-<li>Your computer and the steamdeck need to be on the same&nbsp;network.</li>
-<li>Ideally the steamdeck should be auto detected with mDNS, however not all networks support that. Retrieve the <span class="caps">IP</span> for the WiFi connection on the steamdeck and have it available to help with&nbsp;pairing.</li>
-<li>To simplify this you can set the steamdeck to a permanent <span class="caps">IP</span> on your&nbsp;router.</li>
-</ul>
-<p>With the above in place there&#8217;s a few more steps to get everything&nbsp;working.</p>
-<h1 id="pairing">Pairing</h1>
-<p>Depending on what <span class="caps">OS</span> you are using there&#8217;s a few different ways this can go. Starting with launching the devtools&nbsp;application.</p>
-<h2 id="starting-the-devtools">Starting the&nbsp;devtools</h2>
-<p>I&#8217;ve unfortunately had somewhat mixed results with this part.  In windows you can simply navigate to <code>SteamOS Devkit Client</code> in your software library and hit the Launch button.  This has worked as expected each time I&#8217;ve launched it.  However on Linux it can get somewhat more&nbsp;finicky.</p>
-<p>While you can install the application through steam on Linux, for me at least it does not launch successfully from the steam client (fedora 36, kde, wayland) however it will happily launch from a command line.  Making this work mostly comes down to knowing where the steam programs are installed on your device, typically this is a hidden folder in your home directory as that is the default.  Assuming you are in your home directory and have steam installed using it&#8217;s defaults this command or some similar variation of it will get you up and running: <code>python3.10 ./.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/SteamOSDevkitClient/linux-client/devkit-gui-cp310.pyz</code></p>
-<p>Either way, you should see this screen pop up on your&nbsp;laptop/desktop:</p>
-<p><img alt="Blank steam dev client pane" src="https://blog.shadowgears.com/drafts/steamos-dev-blank.png"></p>
-<h2 id="enabling-pairing-on-the-steamdeck">Enabling pairing on the&nbsp;steamdeck</h2>
-<p>This is actually already enabled out of the box on the steamdeck, it&#8217;s more a question of finding where it lives than anything.  If you press the <code>steam</code> button and scroll all the way down to the bottom of the menu there is a <code>Developer</code> pane available.  The third button down from the top of this pane will put the device in to pairing mode.  Once the device is in pairing mode it should show up automatically in the steam dev kit client.  If it does not show up and you&#8217;ve assigned a permanent <span class="caps">IP</span> address to the device, simply type that <span class="caps">IP</span> into the space that says <code>Connect to Steam Deck by IP</code> and it should connect&nbsp;immediately.</p>
-<h2 id="further-configuration">Further&nbsp;Configuration</h2>
-<p>At this point you should have will have a dump of data and some additional buttons to work with.  First thing you&#8217;ll need to do is set a password on the device, make sure you record this password in a password manager so you don&#8217;t lose&nbsp;it.</p>
-<p>After that you&#8217;ll be able to use the button <code>Remote Shell</code> to open an ssh terminal on the device.  Additionally if you have installed FileZilla properly, when you click <code>Browse Device Files</code> it will launch and ask you for the password configured above. You can also take screenshots directly via the <code>Take Screenshot</code> button, these will go into the folder indicated directly to the left of the button on your local machine, as demonstrated below. If you change the value of <code>Set session</code> to the <code>plasma-x11</code> option it will swap to desktop mode. Setting it back to <code>gamescope</code> should bring it back to the standard steamdeck interface but I&#8217;ve had some issues with that in the past, it&#8217;s better to just use the desktop shortcut from the deck itself. This issue seems to manifest more if you use the <code>plasma-wayland</code> option so <span class="caps">YMMV</span>.</p>
-<p><img alt="Screenshot Capture From Steam Devkit Management Tool" src="https://blog.shadowgears.com/drafts/2023-screenshot-example.png"></p>
-<h1 id="conclusion">Conclusion</h1>
-<p>At this point the system is yours to muck with, doing so will require some familiarity with Linux that is out of scope for this post. But you now have full file access, so if you want to load the system up with emulator friendly games you can do so via Filezilla.  If you want to configure a WireGuard network interface, you can do so from the ssh terminal. All in all this is an incredibly direct way of managing the device and allows you to plumb some of the deeper &#8216;it really is just Linux under the covers&#8217; details of the&nbsp;machine.</p>
-
-                <!-- Neighbors -->
-
-                <!-- Google Adsense -->
-            </div>
-
-            <!-- Sidebar -->
-            <div class="col-md-2 d-none d-md-block small">
-                <div class="sticky-top">
-                    <!-- ToC -->
-                    <nav id="toc" data-toggle="toc" ></nav>
-
-                    <!-- Share post -->
-
-                    <!-- Google Adsense -->
-                </div>
-            </div>
-        </div>
-
-    <!-- Releated posts -->
-
-    <!-- Comments -->
+    <!-- Pagination -->
+<div class="pagination px-2">
+</div>
+    <!-- Google Adsense -->
                 </div>
         </main>
 
@@ -315,7 +234,6 @@
     <!--
     <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
     -->
-        <script type="text/javascript" src="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.js"></script>
     <script type="text/javascript" src="https://blog.shadowgears.com/theme/style.js"></script>
 
     <!-- Sharing -->
@@ -324,19 +242,11 @@
 <script type="application/ld+json">
 {
     "@context": "http://schema.org",
-    "@type": "BlogPosting",
-    "name": "Steam Deck Remote Shell and File Access",
-    "headline": "Steam Deck Remote Shell and File Access",
-    "datePublished": "2023-10-24 00:00:00-04:00",
-    "dateModified": "",
-    "author": {
-        "@type": "Person",
-        "name": "Garrett McGrath",
-        "url": "https://blog.shadowgears.com/author/garrett-mcgrath.html"
-    },
-    "image": "https://blog.shadowgears.com/favicon.ico",
-    "url": "https://blog.shadowgears.com/drafts/steamdeck-quickshell-fileaccess.html",
-    "description": "A quick write up on how to load files directly onto the steamdeck and how to get a remote command prompt for more advanced control."
+    "@type": "Blog",
+    "name": " Putting the Pieces Together ",
+    "url": "https://blog.shadowgears.com",
+    "image": "https://blog.shadowgears.com/",
+    "description": ""
 }
 </script>
     <!-- Disqus count -->
