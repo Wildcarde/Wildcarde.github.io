@@ -63,6 +63,7 @@
         <!--
         <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
         -->
+            <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.css">
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/pygment/friendly.min.css">
         <!--
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/admonition.min.css">
@@ -228,14 +229,13 @@
 
                     <!-- Content -->
     <!-- 2 columns layout -->
-    <!-- single column layout -->
-        <!-- Sharing -->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-10">
 
-        <!-- Share post -->
+                <!-- Sharing -->
 
-        <!-- Article -->
-        <div>
-            <p>We&#8217;ve been running a new install of cobbler at work for the last few months that was scratched together in my free time meant to simplify running and maintaining the service.  Inspired by our older install managing to corrupt itself so thoroughly that we couldn&#8217;t properly recover it, as well as the install itself being rather cumbersome to maintain. When designing this setup the goal was an easy to reason about solution that you could spin up as long as you had a few components in the right spaces. It doesn&#8217;t (currently) do much to hold your hand beyond that but I&#8217;m looking to improve it as time permits. The code for this can be found in our teams public <a href="https://github.com/PrincetonUniversity/pni-cobbler">work repository</a>.</p>
+                <!-- Article -->
+                <p>We&#8217;ve been running a new install of cobbler at work for the last few months that was scratched together in my free time meant to simplify running and maintaining the service.  Inspired by our older install managing to corrupt itself so thoroughly that we couldn&#8217;t properly recover it, as well as the install itself being rather cumbersome to maintain. When designing this setup the goal was an easy to reason about solution that you could spin up as long as you had a few components in the right spaces. It doesn&#8217;t (currently) do much to hold your hand beyond that but I&#8217;m looking to improve it as time permits. The code for this can be found in our teams public <a href="https://github.com/PrincetonUniversity/pni-cobbler">work repository</a>.</p>
 <h2 id="base-layer">Base&nbsp;Layer</h2>
 <p>This is currently built on the centos 7 <span class="caps">EPEL</span> variant of cobbler (2.8.5), but work is ongoing to upgrade to the latest stable version of the software. A few <span class="caps">API</span> changes have however delayed that, the <span class="caps">EPEL</span> version has proven sufficient for our needs in the mean&nbsp;time.</p>
 <h2 id="assumptions">Assumptions</h2>
@@ -249,11 +249,24 @@
 <h2 id="structure">Structure</h2>
 <p>This system is currently built on top of a centos 7 base image. This is primarily due to local familiarity but also because cobblers older rpms sort of &#8216;just work&#8217; on centos 7 right now. Layered over that is a supervisord configuration capable of starting cobblers constituent parts and a <code>forklift</code> script for importing flat configuration files into the system and provide the &#8216;repeatable&#8217; side of this&nbsp;setup.</p>
 <p>The list of services started as part of this container can be found in the <a href="https://github.com/PrincetonUniversity/pni-cobbler/tree/master/supervisord/conf.d">supervisord/conf.d</a>&nbsp;folder.</p>
+
+                <!-- Neighbors -->
+
+                <!-- Google Adsense -->
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-2 d-none d-md-block small">
+                <div class="sticky-top">
+                    <!-- ToC -->
+                    <nav id="toc" data-toggle="toc" ></nav>
+
+                    <!-- Share post -->
+
+                    <!-- Google Adsense -->
+                </div>
+            </div>
         </div>
-
-        <!-- Neighbors -->
-
-        <!-- Google Adsense -->
 
     <!-- Releated posts -->
         <hr>
@@ -291,6 +304,7 @@
     <!--
     <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
     -->
+        <script type="text/javascript" src="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.js"></script>
     <script type="text/javascript" src="https://blog.shadowgears.com/theme/style.js"></script>
 
     <!-- Sharing -->

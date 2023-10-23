@@ -12,21 +12,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
         <!-- Default metadata -->
-    <meta name="author" content="Garrett McGrath" />
+    <meta name="author" content="Garrett" />
     <meta name="description" content="An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client." />
-    <meta name="keywords" content="deployment, blog">
+    <meta name="keywords" content="multimonitor, ultrawide, automation, gaming, moonlight, sunshine, playnite, windows, steamdeck">
 <meta property="og:site_name" content="Putting the Pieces Together" />
 <meta property="og:title" content="Setting up Moonlight and Sunshine to Stream to Steamdeck" />
 <meta property="og:description" content="An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client." />
 <meta property="og:locale" content="en_US" />
 <meta property="og:url" content="https://blog.shadowgears.com/drafts/moonlight-steamdeck-0.html" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-09-14 00:00:00-04:00" />
+<meta property="article:published_time" content="2023-10-22 00:00:00-04:00" />
 <meta property="article:modified_time" content="" />
-<meta property="article:author" content="https://blog.shadowgears.com/author/garrett-mcgrath.html">
+<meta property="article:author" content="https://blog.shadowgears.com/author/garrett.html">
 <meta property="article:section" content="HowTo" />
-	<meta property="article:tag" content="deployment" />
-	<meta property="article:tag" content="blog" />
+	<meta property="article:tag" content="multimonitor" />
+	<meta property="article:tag" content="ultrawide" />
+	<meta property="article:tag" content="automation" />
+	<meta property="article:tag" content="gaming" />
+	<meta property="article:tag" content="moonlight" />
+	<meta property="article:tag" content="sunshine" />
+	<meta property="article:tag" content="playnite" />
+	<meta property="article:tag" content="windows" />
+	<meta property="article:tag" content="steamdeck" />
 	<meta property="og:image" content="https://blog.shadowgears.com/">
 
         <!-- Site Claim -->
@@ -205,18 +212,25 @@
 		<p style="font-size:larger;"><p>An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight&nbsp;client.</p></p>
         <div class="row mx-auto mt-3">
             <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
-                <a href="https://blog.shadowgears.com/author/garrett-mcgrath.html" class="card-link">Garrett McGrath</a>
+                <a href="https://blog.shadowgears.com/author/garrett.html" class="card-link">Garrett</a>
                 <span class="card-link text-success">
-                    <span class="post-date" title="Post date">Thu 14 September 2023</span>
+                    <span class="post-date" title="Post date">Sun 22 October 2023</span>
                     <span class="text-info modified-date" title="Updated date">
-                            Thu 14 September 2023
+                            Sun 22 October 2023
                     </span>
                 </span>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
                 <a class="badge badge-success" href="https://blog.shadowgears.com/category/howto.html">howto</a>
-                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/deployment.html">deployment</a>
-                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/blog.html">blog</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/multimonitor.html">multimonitor</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/ultrawide.html">ultrawide</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/automation.html">automation</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/gaming.html">gaming</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/moonlight.html">moonlight</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/sunshine.html">sunshine</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/playnite.html">playnite</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/windows.html">windows</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/steamdeck.html">steamdeck</a>
             </div>
         </div>
 	</div>
@@ -242,12 +256,9 @@
 <h2 id="prereqs">Prereqs</h2>
 <p>There&#8217;s a few things we are going to take for granted here to&nbsp;start.</p>
 <ul>
-<li>You (the reader) have an up to date copy of sunshine installed on your desktop of&nbsp;choice.</li>
-<li>The basics of this are covered in the <a href="https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/installation.html">sunshine docs</a>.</li>
-<li>You have a copy of moonlight installed and configured as a tile on your&nbsp;steamdeck.</li>
-<li>This is covered extensively in blog posts and YouTube videos the world over, <a href="https://pimylifeup.com/steam-deck-moonlight/">this was the first google hit for me and looks to be a solid explanation</a>.</li>
-<li>A copy of NirSoft&#8217;s <a href="https://www.nirsoft.net/utils/multi_monitor_tool.html">Multi-Monitor Tool</a>.</li>
-<li>This should be placed somewhere you can easily locate and reliably find.  I put it inside a folder simply labeled &#8216;programs&#8217; in my home&nbsp;directory.</li>
+<li>You (the reader) have an up to date copy of sunshine installed on your desktop of choice. The basics of this are covered in the <a href="https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/installation.html">sunshine docs</a>.</li>
+<li>You have a copy of moonlight installed and configured as a tile on your steamdeck. This is covered extensively in blog posts and YouTube videos the world over, <a href="https://pimylifeup.com/steam-deck-moonlight/">this was the first google hit for me and looks to be a solid explanation</a>.</li>
+<li>A copy of NirSoft&#8217;s <a href="https://www.nirsoft.net/utils/multi_monitor_tool.html">Multi-Monitor Tool</a>. This should be placed somewhere you can easily locate and reliably find.  I put it inside a folder simply labeled &#8216;programs&#8217; in my home&nbsp;directory.</li>
 <li>A piece of software you want to make work by streaming to your steamdeck, I&#8217;ll be using <a href="https://playnite.link/">Playnite</a> as it lets me aggregate all my desktop game stores into one library&nbsp;interface.</li>
 </ul>
 <h2 id="details-to-have-in-front-of-you-before-you-start">Details to have in front of you before you&nbsp;start</h2>
@@ -301,15 +312,15 @@ timeout /t 2
 .\MultiMonitorTool.exe /LoadConfig ./default.cfg
 </code></pre></div>
 
-<h2 id="putting-it-together-in-an-application-entry">Putting it Together in an Application&nbsp;Entry</h2>
-<p>To get started I would make a new application entry for this, while it&#8217;s theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that&#8217;s out of scope for this discussion. Naming the new application entry something that makes it clear it&#8217;s a SteamDeck config will help make things obvious on the client side.  I went with simply <code>Playnite - SD</code>.</p>
+<h2 id="putting-it-together-in-an-sunshine-application-entry">Putting it Together in an Sunshine Application&nbsp;Entry</h2>
+<p>To get started I would make a new application entry in Sunshine for this. While it&#8217;s theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that&#8217;s out of scope for this discussion. Naming the new application entry something that makes it clear it&#8217;s a SteamDeck config will help make things obvious on the client side. I went with simply <code>Playnite - SD</code>.</p>
 <p>In this new application entry add the full path to your <code>sd-native.bat</code> file to the first entry in the <code>Do Command</code> column. In the neighboring column under <code>Undo Command</code> place the full path to the <code>default-monitor-config.bat</code> file.</p>
-<p>For Playnite specifically it&#8217;s a good idea to add two additional <code>Undo Command</code> entries of <code>taskkill /f /im Playnite.DesktopApp.exe</code> and <code>taskkill /f /im Playnite.FullscreenApp.exe</code>.  Adding these ensures terminating the application entry also kills&nbsp;Playnite.</p>
+<p>For Playnite specifically it&#8217;s a good idea to add two additional <code>Undo Command</code> entries of <code>taskkill /f /im Playnite.DesktopApp.exe</code> and <code>taskkill /f /im Playnite.FullscreenApp.exe</code>. Adding these ensures terminating the application entry also kills&nbsp;Playnite.</p>
 <p>Under the <code>Command</code> entry further down the page you will need to add the path to Playnite&#8217;s main executable, this is typically <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.FullscreenApp.exe</code>, and you&#8217;ll want to set the entry <code>Working Directory</code> to simply <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code>.</p>
 <p>At this point you are done, the setup should be ready to test out and stream&nbsp;from.</p>
 <h1 id="areas-of-improvement">Areas Of&nbsp;Improvement</h1>
 <ul>
-<li>Currently if something goes pear shaped killing the Playnite session will not terminate the underlying application that was launched by&nbsp;it.</li>
+<li>Currently if something goes pear shaped killing the Playnite session will not terminate the underlying application that was launched by it; I&#8217;m currently not sure how to do this but will add an article if I come up with a solution. It&#8217;s possible using alternative shutdown commands this can be resolved, this will require more&nbsp;experimentation.</li>
 <li>The script for turning off secondary monitors can fail if the systems graphics drivers have been updated but the system has not been rebooted; the most direct work around is to simply reboot after these kinds of&nbsp;updates.</li>
 </ul>
 
@@ -332,13 +343,6 @@ timeout /t 2
         </div>
 
     <!-- Releated posts -->
-        <hr>
-        <div>
-            <h5>Related posts:</h5>
-            <ul>
-                <li><a href="https://blog.shadowgears.com/building-the-blog.html">Building the&nbsp;Blog</a></li>
-            </ul>
-        </div>
 
     <!-- Comments -->
                 </div>
@@ -379,12 +383,12 @@ timeout /t 2
     "@type": "BlogPosting",
     "name": "Setting up Moonlight and Sunshine to Stream to Steamdeck",
     "headline": "Setting up Moonlight and Sunshine to Stream to Steamdeck",
-    "datePublished": "2023-09-14 00:00:00-04:00",
+    "datePublished": "2023-10-22 00:00:00-04:00",
     "dateModified": "",
     "author": {
         "@type": "Person",
-        "name": "Garrett McGrath",
-        "url": "https://blog.shadowgears.com/author/garrett-mcgrath.html"
+        "name": "Garrett",
+        "url": "https://blog.shadowgears.com/author/garrett.html"
     },
     "image": "https://blog.shadowgears.com/favicon.ico",
     "url": "https://blog.shadowgears.com/drafts/moonlight-steamdeck-0.html",

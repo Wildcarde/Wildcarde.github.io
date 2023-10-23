@@ -63,6 +63,7 @@
         <!--
         <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
         -->
+            <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.css">
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/pygment/friendly.min.css">
         <!--
         <link rel="stylesheet" href="https://blog.shadowgears.com/theme/extra/admonition.min.css">
@@ -228,14 +229,13 @@
 
                     <!-- Content -->
     <!-- 2 columns layout -->
-    <!-- single column layout -->
-        <!-- Sharing -->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-10">
 
-        <!-- Share post -->
+                <!-- Sharing -->
 
-        <!-- Article -->
-        <div>
-            <p>It&#8217;s been a while since I&#8217;ve spent any serious time looking at blogging, static site generation, and the github pages system so it was no surprise that my knowledge was more than a little out of date.  What was surprising however was how much information online seems to be equally out of date at this point a state that was a little disappointing but not overtly surprising.  It&#8217;s not like github shouts from the rooftop when they change things quietly in the background, especially when those old approaches still&nbsp;work.  </p>
+                <!-- Article -->
+                <p>It&#8217;s been a while since I&#8217;ve spent any serious time looking at blogging, static site generation, and the github pages system so it was no surprise that my knowledge was more than a little out of date.  What was surprising however was how much information online seems to be equally out of date at this point a state that was a little disappointing but not overtly surprising.  It&#8217;s not like github shouts from the rooftop when they change things quietly in the background, especially when those old approaches still&nbsp;work.  </p>
 <p>So this post will serve somewhat as modern documentation for how github user pages can be setup and automated to use <a href="https://blog.getpelican.com/">Pelican</a> to generate a blog (like this&nbsp;one).</p>
 <h2 id="how-things-used-to-work">How things used to&nbsp;work</h2>
 <p>Originally what you would do is create a public repository named <code>&lt;githubuser&gt;.github.io</code>.  From here the <code>main</code> or <code>master</code> branch in the repository would be your raw content, so in pelican a folder full of markdown files.  From there you&#8217;d generate an output folder, that typically you would not capture in git, and merge that into a separate branch named <code>gh-pages</code>.  This felt like creating some sort of weird hell alternate file stream based approach and was generally kinda difficult to wrap your head around.  The alternative was brute forcing it by simply checking out two different copies of the same repo in separate folders, then just copy/pasting from one to the other and pushing.  This works but at that point, why have them be the same repo?  I suspect this is something github realized somewhere along the way because that&#8217;s how you do it&nbsp;now!</p>
@@ -394,17 +394,30 @@
 <li>https://docs.github.com/en/actions/quickstart</li>
 </ul>
 <p>currently using: github actions based on ubuntu-latest, python setup commands, and the push directory to another repository&nbsp;action.</p>
-        </div>
 
-        <!-- Neighbors -->
-            <br>
-            <b>Read more:</b><br>
+                <!-- Neighbors -->
+                    <br>
+                    <b>Read more:</b><br>
 <div class="pagination">
     <a class="w-100" href="https://blog.shadowgears.com/glasscanopy-campaign-report-0.html">
 Glass Canopy Campaign, Report&nbsp;0
     </a>
 </div>
-        <!-- Google Adsense -->
+                <!-- Google Adsense -->
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-2 d-none d-md-block small">
+                <div class="sticky-top">
+                    <!-- ToC -->
+                    <nav id="toc" data-toggle="toc" ></nav>
+
+                    <!-- Share post -->
+
+                    <!-- Google Adsense -->
+                </div>
+            </div>
+        </div>
 
     <!-- Releated posts -->
 
@@ -435,6 +448,7 @@ Glass Canopy Campaign, Report&nbsp;0
     <!--
     <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
     -->
+        <script type="text/javascript" src="https://blog.shadowgears.com/theme/extra/bootstrap-toc.min.js"></script>
     <script type="text/javascript" src="https://blog.shadowgears.com/theme/style.js"></script>
 
     <!-- Sharing -->
