@@ -19,7 +19,7 @@
 <meta property="og:title" content="Steam Deck Remote Shell and File Access" />
 <meta property="og:description" content="A quick write up on how to load files directly onto the Steam Deck and how to get a remote command prompt for more advanced control." />
 <meta property="og:locale" content="en_US" />
-<meta property="og:url" content="https://blog.shadowgears.com/drafts/steamdeck-quickshell-fileaccess.html" />
+<meta property="og:url" content="https://blog.shadowgears.com/steamdeck-quickshell-fileaccess.html" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2023-10-28 00:00:00-04:00" />
 <meta property="article:modified_time" content="" />
@@ -231,19 +231,25 @@
 <p>In windows you can simply navigate to <code>SteamOS Devkit Client</code> in your software library and hit the Launch button. This has worked as expected each time I&#8217;ve launched&nbsp;it.</p>
 <p>However on Linux it can get somewhat more finicky. While you can install the application through Steam on Linux, for me at least it does not launch successfully from the Steam client (Fedora 36, <span class="caps">KDE</span>, WayLand) however it will happily launch from a command line. Making this work mostly comes down to knowing where the Steam programs are installed on your device, typically this is a hidden folder in your home directory as that is the default. Assuming you are in your home directory and have Steam installed using it&#8217;s defaults this command or some similar variation of it will get you up and running: <code>python3.10 ./.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/SteamOSDevkitClient/linux-client/devkit-gui-cp310.pyz</code> (<em>note</em>: this filename at the end may change as versions update, simply update to the latest devkit-gui python file; additionally python 3.11 does not work so you will need to install 3.10 for this to&nbsp;work)</p>
 <p>Either way, you should see this screen pop up on your&nbsp;laptop/desktop:</p>
-<p><img alt="Blank Steam dev client pane" src="https://blog.shadowgears.com/drafts/steamos-dev-blank.png"></p>
+<p><img alt="Blank Steam dev client pane" src="https://blog.shadowgears.com/steamos-dev-blank.png"></p>
 <h2 id="enabling-pairing-on-the-steamdeck">Enabling pairing on the&nbsp;steamdeck</h2>
 <p>This is actually already enabled out of the box on the Steam Deck, it&#8217;s more a question of finding where it lives than anything. If you press the <code>steam</code> button and scroll all the way down to the bottom of the menu there is a <code>Developer</code> pane available. The third button down from the top of this pane will put the device in to pairing mode. Once the device is in pairing mode it should show up automatically in the Steam dev kit client. If it does not show up and you&#8217;ve assigned a permanent <span class="caps">IP</span> address to the device, simply type that <span class="caps">IP</span> into the space that says <code>Connect to Steam Deck by IP</code> and it should connect&nbsp;immediately.</p>
 <h2 id="further-configuration">Further&nbsp;Configuration</h2>
 <p>At this point you should have will have a dump of data and some additional buttons to work with. First thing you&#8217;ll need to do is set a password on the device, make sure you record this password in a password manager so you don&#8217;t lose&nbsp;it.</p>
 <p>After that you&#8217;ll be able to use the button <code>Remote Shell</code> to open an ssh terminal on the device. Additionally if you have installed FileZilla properly, when you click <code>Browse Device Files</code> it will launch and ask you for the password configured above. You can also take screenshots directly via the <code>Take Screenshot</code> button, these will go into the folder indicated directly to the left of the button on your local machine, as demonstrated below. If you change the value of <code>Set session</code> to the <code>plasma-x11</code> option it will swap to desktop mode. Setting it back to <code>gamescope</code> should bring it back to the standard Steam Deck interface but I&#8217;ve had some issues with that in the past, it&#8217;s better to just use the desktop shortcut from the deck itself. This issue seems to manifest more if you use the <code>plasma-wayland</code> option so <span class="caps">YMMV</span>.</p>
-<p>An example screenshot captured using the devkit client.<br>
-<img alt="Screenshot Capture From Steam Devkit Management Tool" src="https://blog.shadowgears.com/drafts/2023-screenshot-example.png"></p>
+<p><em>An example screenshot captured using the devkit client</em><br>
+<img alt="Screenshot Capture From Steam Devkit Management Tool" src="https://blog.shadowgears.com/2023-screenshot-example.png"></p>
 <h1 id="conclusion">Conclusion</h1>
 <p>At this point the system is yours to muck with, doing so will require some familiarity with Linux that is out of scope for this post. But you now have full file access, so if you want to load the system up with emulator friendly games you can do so via Filezilla. If you want to configure a WireGuard network interface, you can do so from the ssh terminal. All in all this is an incredibly direct way of managing the device and allows you to plumb some of the deeper &#8216;it really is just Linux under the covers&#8217; details of the&nbsp;machine.</p>
 
                 <!-- Neighbors -->
-
+                    <br>
+                    <b>Read more:</b><br>
+<div class="pagination">
+    <a class="w-100" href="https://blog.shadowgears.com/moonlight-steamdeck-0.html">
+Setting up Moonlight and Sunshine to Stream to&nbsp;Steamdeck
+    </a>
+</div>
                 <!-- Google Adsense -->
             </div>
 
@@ -261,6 +267,13 @@
         </div>
 
     <!-- Releated posts -->
+        <hr>
+        <div>
+            <h5>Related posts:</h5>
+            <ul>
+                <li><a href="https://blog.shadowgears.com/moonlight-steamdeck-0.html">Setting up Moonlight and Sunshine to Stream to&nbsp;Steamdeck</a></li>
+            </ul>
+        </div>
 
     <!-- Comments -->
                 </div>
@@ -309,7 +322,7 @@
         "url": "https://blog.shadowgears.com/author/garrett.html"
     },
     "image": "https://blog.shadowgears.com/favicon.ico",
-    "url": "https://blog.shadowgears.com/drafts/steamdeck-quickshell-fileaccess.html",
+    "url": "https://blog.shadowgears.com/steamdeck-quickshell-fileaccess.html",
     "description": "A quick write up on how to load files directly onto the Steam Deck and how to get a remote command prompt for more advanced control."
 }
 </script>

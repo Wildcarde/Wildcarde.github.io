@@ -19,7 +19,7 @@
 <meta property="og:title" content="Setting up Moonlight and Sunshine to Stream to Steamdeck" />
 <meta property="og:description" content="An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client." />
 <meta property="og:locale" content="en_US" />
-<meta property="og:url" content="https://blog.shadowgears.com/drafts/moonlight-steamdeck-0.html" />
+<meta property="og:url" content="https://blog.shadowgears.com/moonlight-steamdeck-0.html" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2023-10-22 00:00:00-04:00" />
 <meta property="article:modified_time" content="" />
@@ -249,11 +249,11 @@
 <p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we&#8217;ll use a set of batch scripts to swap the two modes back and forth automatically. You could make this more robust using a proper scripting language like powershell or python but for our purposes here a brute force batch file is&nbsp;sufficient.</p>
 <h2 id="capture-monitor-configurations">Capture Monitor&nbsp;Configurations</h2>
 <p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the MultiMonitorTool <span class="caps">GUI</span> and you&#8217;ll see a window similar to&nbsp;below.</p>
-<p><img alt="MultiMonitorTool All Screens Enabled" src="https://blog.shadowgears.com/drafts/2023-multimon-all.png"></p>
+<p><img alt="MultiMonitorTool All Screens Enabled" src="https://blog.shadowgears.com/2023-multimon-all.png"></p>
 <p>Once everything is configured as desired, simply go to the <code>File</code> menu button and select <code>Save Monitors Configuration</code>.  Place this file somewhere easily located and named something sensible. In my case I chose to simply put this in the folder for MultiMonitorTool and name it <code>default.cfg</code> as this makes the scripts below&nbsp;easier.</p>
 <p>After this is complete, reconfigure the screens to be setup as you would like them to be for the Steamdeck or other streaming target. For the Steamdeck, the native resolution is <code>1280x800</code>; so I&#8217;ve disabled the right and left screens on my system and set the primary screens resolution to <code>1280x800</code>.</p>
 <p>Once this is complete, check that the changes are reflected in MultiMonitorTool&#8217;s <span class="caps">GUI</span> (as below) and save this new configuration in the same place as the first.  I named this file simply <code>steamdeck-native.cfg</code> so it&#8217;s easy to&nbsp;find.</p>
-<p><img alt="MultiMonitorTool Steamdeck Native Config" src="https://blog.shadowgears.com/drafts/2023-multimon-single.png"></p>
+<p><img alt="MultiMonitorTool Steamdeck Native Config" src="https://blog.shadowgears.com/2023-multimon-single.png"></p>
 <h2 id="start-script">Start&nbsp;Script</h2>
 <p>This start-up script is invoked before launching the Playnite executable, you&#8217;ll need to make a copy of the script below on your local machine. This can be as simply as copying this and pasting it into notepad. This script will turn off your secondary screens and force the resolution settings expected to the primary monitor by invoking the related config&nbsp;file.</p>
 <p><em>Note:</em> You will need to update the <code>cd</code> entry to where your MultiMonitorTool executable is&nbsp;located.</p>
@@ -301,7 +301,15 @@ timeout /t 2
 </ul>
 
                 <!-- Neighbors -->
-
+                    <br>
+                    <b>Read more:</b><br>
+<div class="pagination">
+    <a class="w-50" href="https://blog.shadowgears.com/building-the-blog.html">
+&ll; Building the&nbsp;Blog
+    </a>
+    <a class="w-50 text-right" href="https://blog.shadowgears.com/steamdeck-quickshell-fileaccess.html">
+        Steam Deck Remote Shell and File&nbsp;Access &gg;    </a>
+</div>
                 <!-- Google Adsense -->
             </div>
 
@@ -319,6 +327,13 @@ timeout /t 2
         </div>
 
     <!-- Releated posts -->
+        <hr>
+        <div>
+            <h5>Related posts:</h5>
+            <ul>
+                <li><a href="https://blog.shadowgears.com/steamdeck-quickshell-fileaccess.html">Steam Deck Remote Shell and File&nbsp;Access</a></li>
+            </ul>
+        </div>
 
     <!-- Comments -->
                 </div>
@@ -367,7 +382,7 @@ timeout /t 2
         "url": "https://blog.shadowgears.com/author/garrett.html"
     },
     "image": "https://blog.shadowgears.com/favicon.ico",
-    "url": "https://blog.shadowgears.com/drafts/moonlight-steamdeck-0.html",
+    "url": "https://blog.shadowgears.com/moonlight-steamdeck-0.html",
     "description": "An exploration of the configuration of sunshine on a gaming rig to stream to a steamdeck moonlight client."
 }
 </script>
