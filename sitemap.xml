@@ -6,35 +6,35 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/archives.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/author/garrett-mcgrath.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/author/garrett.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/authors.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -48,21 +48,21 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/categories.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/category/glass-canopy.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/category/howto.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -90,182 +90,182 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/tag/automation.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/blog.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/deployment.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/dnd.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/docker.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/filezilla.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/firewalld.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/gaming.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/glass-canopy.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/glasscanopy.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/home_automation.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/iptables.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/linux.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/moonlight.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/multimonitor.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/playnite.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/remote-access.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/roleplaying.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/ssh.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/steamdeck.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/story.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/sunshine.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/systems.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/ultrawide.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/windows.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tags.html</loc>
-<lastmod>2023-11-02T21:53:06-00:00</lastmod>
+<lastmod>2023-11-02T22:01:55-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
