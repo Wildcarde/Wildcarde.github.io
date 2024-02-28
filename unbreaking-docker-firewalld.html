@@ -305,14 +305,19 @@ $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class
 <h1 id="areas-of-improvement">Areas of&nbsp;Improvement</h1>
 <p>Unfortunately the &#8216;proper&#8217; fix for this is in the court of Docker / the Moby project. If they added a <code>firewalld</code> flag along side the <code>iptables</code> flag that simply added the virtual network device names to the docker zone and enabled masquerade for publicly facing&nbsp;zones.</p>
 <p>It should also be noted, all of the above only applies to <span class="caps">IPV4</span>. For <span class="caps">IPV6</span>? I have no idea, we don&#8217;t currently use it at work and I&#8217;ve got no use for it at home. I wouldn&#8217;t be surprised if it had some weird behavior there as well&nbsp;tho.</p>
+<h1 id="post-publication-gotchas">Post Publication&nbsp;Gotchas</h1>
+<h2 id="12-7-23">12-7-23</h2>
+<p>We found at work that despite best efforts to avoid it, no matter what we did we could not get firewalld to fully dispose of the iptables rules without a full reboot on one of our servers (rock9). After a reboot it worked exactly as&nbsp;expected.</p>
 
                 <!-- Neighbors -->
                     <br>
                     <b>Read more:</b><br>
 <div class="pagination">
-    <a class="w-100" href="https://blog.shadowgears.com/steamdeck-quickshell-fileaccess.html">
-Steam Deck Remote Shell and File&nbsp;Access
+    <a class="w-50" href="https://blog.shadowgears.com/steamdeck-quickshell-fileaccess.html">
+&ll; Steam Deck Remote Shell and File&nbsp;Access
     </a>
+    <a class="w-50 text-right" href="https://blog.shadowgears.com/Engineering-Notebook-Rules-Engagement.html">
+        Engineering Notebook Rules of&nbsp;Engagement &gg;    </a>
 </div>
                 <!-- Google Adsense -->
             </div>
