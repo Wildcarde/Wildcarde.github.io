@@ -12,15 +12,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
         <!-- Default metadata -->
-            <meta name="author" content="Garrett" />
-            <meta name="description" content="" />
+    <meta name="author" content="Garrett" />
+    <meta name="description" content="This is likely to end up a set of articles rather than a single one, but this is meant to be a write up on how my local network works for both my own sanity and for those trying to make a reasonably robust network. This network should work seamlessly …" />
+    <meta name="keywords" content="VyOS, network, vlan, firewalls, adblock, containers, traefik">
+<meta property="og:site_name" content="Putting the Pieces Together" />
+<meta property="og:title" content="A Complicated but Functional Network" />
+<meta property="og:description" content="This is likely to end up a set of articles rather than a single one, but this is meant to be a write up on how my local network works for both my own sanity and for those trying to make a reasonably robust network. This network should work seamlessly …" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blog.shadowgears.com/drafts/complicated-functional-network.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-05-15 00:00:00-04:00" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blog.shadowgears.com/author/garrett.html">
+<meta property="article:section" content="HowTo,Networking,syadmin" />
+	<meta property="article:tag" content="VyOS" />
+	<meta property="article:tag" content="network" />
+	<meta property="article:tag" content="vlan" />
+	<meta property="article:tag" content="firewalls" />
+	<meta property="article:tag" content="adblock" />
+	<meta property="article:tag" content="containers" />
+	<meta property="article:tag" content="traefik" />
+	<meta property="og:image" content="https://blog.shadowgears.com/">
 
         <!-- Site Claim -->
 
 
         <!-- Title -->
         <title>
-Putting the Pieces Together - Authors        </title>
+    A Complicated but Functional Network &ndash; Putting the Pieces Together
+        </title>
         
         <!-- Icon -->
         <link rel="shortcut icon" href="https://blog.shadowgears.com/favicon.ico" type="image/x-icon">
@@ -176,6 +196,31 @@ ga('send', 'pageview');
 
         <!-- Header -->
         <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="complicated-functional-network">A Complicated but Functional&nbsp;Network</h3>
+		<p style="font-size:larger;"><p>This is likely to end up a set of articles rather than a single one, but this is meant to be a write up on how my local network works for both my own sanity and for those trying to make a reasonably robust network. This network should work seamlessly …</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blog.shadowgears.com/author/garrett.html" class="card-link">Garrett</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Wed 15 May 2024</span>
+                    <span class="text-info modified-date" title="Updated date">
+                            Wed 15 May 2024
+                    </span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blog.shadowgears.com/category/howtonetworkingsyadmin.html">howto,networking,syadmin</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/vyos.html">vyos</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/network.html">network</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/vlan.html">vlan</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/firewalls.html">firewalls</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/adblock.html">adblock</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/containers.html">containers</a>
+                    <a class="badge badge-info" href="https://blog.shadowgears.com/tag/traefik.html">traefik</a>
+            </div>
+        </div>
+	</div>
         </header>
 
         <!-- Main -->
@@ -184,11 +229,39 @@ ga('send', 'pageview');
                     <!-- Sharing -->
 
                     <!-- Content -->
-    <h2>Authors on Putting the Pieces Together</h2>
-    <ul>
-            <li><a href="https://blog.shadowgears.com/author/garrett.html">Garrett</a> (4)</li>
-            <li><a href="https://blog.shadowgears.com/author/garrett-mcgrath.html">Garrett McGrath</a> (2)</li>
-    </ul>
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <p>This is likely to end up a set of articles rather than a single one, but this is meant to be a write up on how my local network works for both my own sanity and for those trying to make a reasonably robust network. This network should work seamlessly with computers, mobile devices, and other table top devices without individual configurations. Specifically you will not need to do things like setup a certificate authority, directly manage certs, do host level configuration to enable hostnames, or ideally make any client level changes to make them play nice with each other or the wider&nbsp;internet.</p>
+<p>Many of these things can be handled in a variety of ways but I&#8217;ll be recording specifically how things are done in&nbsp;setup.</p>
+<h2 id="structural-notes">Structural&nbsp;Notes</h2>
+<p>I use a series of subdomains to logically organize my network under a single top level domain. You could however do this as a single domain if you so chose, that&#8217;s purely an organizational&nbsp;decision.</p>
+<p>The way this system is setup is using a VyOS box as the router for the gateway out of the network, this will also act as a firewall, vpn host target, and ad filtering solution. These responsibilities can be moved elsewhere but if the router is sufficiently powerful keeping at least the vpn endpoint on it is strongly advised for simplicity and keeping the adblocking service local means one less back and forth trip to another device in order for that functionality to be&nbsp;achieved.</p>
+<p>The VyOS router configured its out going connection via <span class="caps">DHCP</span> in my config but if you have a static ip you&#8217;ll need to configure that using the related docs. Over top it is hosted a wireguard vpn network that allowed remote access, a container running pihole to manage dns blocking, and HAProxy to act as a http/https router to some of my internal services, and firewall controls to make sure dns and access are obeyed as expected. While the HAProxy could be replaced with traefik, it&#8217;s a configuration I ported forward from previous setups so I left it &#8216;as is&#8217; for&nbsp;now.</p>
+<h2 id="things-you-need-before-you-start">Things you need before you&nbsp;start</h2>
+<ul>
+<li>A dedicated domain you own and&nbsp;control</li>
+<li><span class="caps">API</span> access to that domain so you can make <span class="caps">TXT</span> records automatically as well as DynDNS&nbsp;updates</li>
+<li>A dedicated device to host the router&nbsp;software</li>
+<li>A managed network switch or multiple ports for use as internal&nbsp;subnetworks</li>
+<li>A set of <span class="caps">IP</span> ranges to use, I use 4 but depending on what you are planning you may need more or&nbsp;less</li>
+</ul>
+<h2 id="getting-started">Getting&nbsp;Started</h2>
+<p>First things first you need to get a VyOS configuration built and configured. This is easier than it appears on the surface but will require familiarizing yourself with the VyOS online documentation and build&nbsp;instructions.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
                 </div>
         </main>
 
@@ -223,11 +296,19 @@ ga('send', 'pageview');
 <script type="application/ld+json">
 {
     "@context": "http://schema.org",
-    "@type": "Blog",
-    "name": " Putting the Pieces Together ",
-    "url": "https://blog.shadowgears.com",
-    "image": "https://blog.shadowgears.com/",
-    "description": ""
+    "@type": "BlogPosting",
+    "name": "A Complicated but Functional Network",
+    "headline": "A Complicated but Functional Network",
+    "datePublished": "2024-05-15 00:00:00-04:00",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Garrett",
+        "url": "https://blog.shadowgears.com/author/garrett.html"
+    },
+    "image": "https://blog.shadowgears.com/favicon.ico",
+    "url": "https://blog.shadowgears.com/drafts/complicated-functional-network.html",
+    "description": "This is likely to end up a set of articles rather than a single one, but this is meant to be a write up on how my local network works for both my own sanity and for those trying to make a reasonably robust network. This network should work seamlessly …"
 }
 </script>
     <!-- Disqus count -->

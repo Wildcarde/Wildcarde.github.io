@@ -255,24 +255,24 @@ ga('send', 'pageview');
 </ul>
 <h2 id="details-to-have-in-front-of-you-before-you-start">Details to have in front of you before you&nbsp;start</h2>
 <ul>
-<li>Full drive path to your program folder, for example: <code>C:\Users\&lt;username&gt;\Programs\</code></li>
-<li>Additionally make note of where MultiMonitorTool is, ie: <code>C:\Users\&lt;username&gt;\Programs\multimonitortool-x64\</code></li>
-<li>How many monitors you have, for example: <code>3</code></li>
-<li>The full path to the executable you want to run, for example for Playnite: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.Fullscreenapp.exe</code></li>
-<li>The working directory you want the program to run in, some applications don&#8217;t care but Playnite does so: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code></li>
+<li>Full drive path to your program folder, for&nbsp;example: <code>C:\Users\&lt;username&gt;\Programs\</code></li>
+<li>Additionally make note of where MultiMonitorTool is,&nbsp;ie: <code>C:\Users\&lt;username&gt;\Programs\multimonitortool-x64\</code></li>
+<li>How many monitors you have, for&nbsp;example: <code>3</code></li>
+<li>The full path to the executable you want to run, for example for&nbsp;Playnite: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.Fullscreenapp.exe</code></li>
+<li>The working directory you want the program to run in, some applications don&#8217;t care but Playnite does&nbsp;so: <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code></li>
 </ul>
 <h1 id="howto">HowTo</h1>
 <p>The basic gist of this is that we are going to use MultiMonitorTool to capture our default configuration, and then the configuration we want for when things are streamed out to the steam deck as configuration files.  Once these are captured we&#8217;ll use a set of batch scripts to swap the two modes back and forth automatically. You could make this more robust using a proper scripting language like powershell or python but for our purposes here a brute force batch file is&nbsp;sufficient.</p>
 <h2 id="capture-monitor-configurations">Capture Monitor&nbsp;Configurations</h2>
 <p>To get started, in the windows display settings configure your screens as you would like them to be by default. After this is set start up the MultiMonitorTool <span class="caps">GUI</span> and you&#8217;ll see a window similar to&nbsp;below.</p>
 <p><img alt="MultiMonitorTool All Screens Enabled" src="https://blog.shadowgears.com/2023-multimon-all.png"></p>
-<p>Once everything is configured as desired, simply go to the <code>File</code> menu button and select <code>Save Monitors Configuration</code>.  Place this file somewhere easily located and named something sensible. In my case I chose to simply put this in the folder for MultiMonitorTool and name it <code>default.cfg</code> as this makes the scripts below&nbsp;easier.</p>
-<p>After this is complete, reconfigure the screens to be setup as you would like them to be for the Steamdeck or other streaming target. For the Steamdeck, the native resolution is <code>1280x800</code>; so I&#8217;ve disabled the right and left screens on my system and set the primary screens resolution to <code>1280x800</code>.</p>
-<p>Once this is complete, check that the changes are reflected in MultiMonitorTool&#8217;s <span class="caps">GUI</span> (as below) and save this new configuration in the same place as the first.  I named this file simply <code>steamdeck-native.cfg</code> so it&#8217;s easy to&nbsp;find.</p>
+<p>Once everything is configured as desired, simply go to&nbsp;the <code>File</code> menu button and&nbsp;select <code>Save Monitors Configuration</code>.  Place this file somewhere easily located and named something sensible. In my case I chose to simply put this in the folder for MultiMonitorTool and name&nbsp;it <code>default.cfg</code> as this makes the scripts below&nbsp;easier.</p>
+<p>After this is complete, reconfigure the screens to be setup as you would like them to be for the Steamdeck or other streaming target. For the Steamdeck, the native resolution&nbsp;is <code>1280x800</code>; so I&#8217;ve disabled the right and left screens on my system and set the primary screens resolution&nbsp;to <code>1280x800</code>.</p>
+<p>Once this is complete, check that the changes are reflected in MultiMonitorTool&#8217;s <span class="caps">GUI</span> (as below) and save this new configuration in the same place as the first.  I named this file&nbsp;simply <code>steamdeck-native.cfg</code> so it&#8217;s easy to&nbsp;find.</p>
 <p><img alt="MultiMonitorTool Steamdeck Native Config" src="https://blog.shadowgears.com/2023-multimon-single.png"></p>
 <h2 id="start-script">Start&nbsp;Script</h2>
 <p>This start-up script is invoked before launching the Playnite executable, you&#8217;ll need to make a copy of the script below on your local machine. This can be as simply as copying this and pasting it into notepad. This script will turn off your secondary screens and force the resolution settings expected to the primary monitor by invoking the related config&nbsp;file.</p>
-<p><em>Note:</em> You will need to update the <code>cd</code> entry to where your MultiMonitorTool executable is&nbsp;located.</p>
+<p><em>Note:</em> You will need to update&nbsp;the <code>cd</code> entry to where your MultiMonitorTool executable is&nbsp;located.</p>
 <p><code>sd-native.bat:</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">: disable secondary monitors and switch main monitor to steamdeck native resolution</span>
 <span class="p">:</span><span class="c1">:</span>
@@ -291,8 +291,8 @@ timeout /t 2
 </code></pre></div>
 
 <h2 id="exit-script">Exit&nbsp;Script</h2>
-<p>This script is functionally the inversion of the above script and is meant to run when exiting a sunshine application. This will forcibly restore the default screen configuration but has some subtleties to be aware of. The <code>/LoadConfig</code> flag seems to have some issues with restoring several screens at once, however it can simply be run multiple times to force the system to enable all screens. As such you will need to include the line <code>.\MultiMonitorTool.exe /LoadConfig ./default.cfg</code> once for each monitor you need to&nbsp;re-activate.</p>
-<p><em>Note:</em> As above you will need to update the <code>cd</code> command to the appropriate location for your&nbsp;system.</p>
+<p>This script is functionally the inversion of the above script and is meant to run when exiting a sunshine application. This will forcibly restore the default screen configuration but has some subtleties to be aware of.&nbsp;The <code>/LoadConfig</code> flag seems to have some issues with restoring several screens at once, however it can simply be run multiple times to force the system to enable all screens. As such you will need to include the&nbsp;line <code>.\MultiMonitorTool.exe /LoadConfig ./default.cfg</code> once for each monitor you need to&nbsp;re-activate.</p>
+<p><em>Note:</em> As above you will need to update&nbsp;the <code>cd</code> command to the appropriate location for your&nbsp;system.</p>
 <p><code>default-monitor-config.bat</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">:reset the monitor configuration to default</span>
 <span class="p">:</span><span class="c1">:</span>
@@ -305,10 +305,10 @@ timeout /t 2
 </code></pre></div>
 
 <h2 id="putting-it-together-in-an-sunshine-application-entry">Putting it Together in an Sunshine Application&nbsp;Entry</h2>
-<p>To get started I would make a new application entry in Sunshine for this. While it&#8217;s theoretically possible to make these scripts adapt to using the <code>ENVVAR</code> values supplied at the bottom of the application page that&#8217;s out of scope for this discussion. Naming the new application entry something that makes it clear it&#8217;s a SteamDeck config will help make things obvious on the client side. I went with simply <code>Playnite - SD</code>.</p>
-<p>In this new application entry add the full path to your <code>sd-native.bat</code> file to the first entry in the <code>Do Command</code> column. In the neighboring column under <code>Undo Command</code> place the full path to the <code>default-monitor-config.bat</code> file.</p>
-<p>For Playnite specifically it&#8217;s a good idea to add two additional <code>Undo Command</code> entries of <code>taskkill /f /im Playnite.DesktopApp.exe</code> and <code>taskkill /f /im Playnite.FullscreenApp.exe</code>. Adding these ensures terminating the application entry also kills&nbsp;Playnite.</p>
-<p>Under the <code>Command</code> entry further down the page you will need to add the path to Playnite&#8217;s main executable, this is typically <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.FullscreenApp.exe</code>, and you&#8217;ll want to set the entry <code>Working Directory</code> to simply <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code>.</p>
+<p>To get started I would make a new application entry in Sunshine for this. While it&#8217;s theoretically possible to make these scripts adapt to using&nbsp;the <code>ENVVAR</code> values supplied at the bottom of the application page that&#8217;s out of scope for this discussion. Naming the new application entry something that makes it clear it&#8217;s a SteamDeck config will help make things obvious on the client side. I went with&nbsp;simply <code>Playnite - SD</code>.</p>
+<p>In this new application entry add the full path to&nbsp;your <code>sd-native.bat</code> file to the first entry in&nbsp;the <code>Do Command</code> column. In the neighboring column&nbsp;under <code>Undo Command</code> place the full path to&nbsp;the <code>default-monitor-config.bat</code> file.</p>
+<p>For Playnite specifically it&#8217;s a good idea to add two&nbsp;additional <code>Undo Command</code> entries&nbsp;of <code>taskkill /f /im Playnite.DesktopApp.exe</code> and <code>taskkill /f /im Playnite.FullscreenApp.exe</code>. Adding these ensures terminating the application entry also kills&nbsp;Playnite.</p>
+<p>Under&nbsp;the <code>Command</code> entry further down the page you will need to add the path to Playnite&#8217;s main executable, this is&nbsp;typically <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\Playnite.FullscreenApp.exe</code>, and you&#8217;ll want to set the&nbsp;entry <code>Working Directory</code> to&nbsp;simply <code>C:\Users\&lt;username&gt;\AppData\Local\Playnite\</code>.</p>
 <p>At this point you are done, the setup should be ready to test out and stream&nbsp;from.</p>
 <h1 id="areas-of-improvement">Areas Of&nbsp;Improvement</h1>
 <ul>

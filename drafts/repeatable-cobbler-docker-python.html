@@ -234,12 +234,12 @@ ga('send', 'pageview');
 <p>This container is built on a few specific&nbsp;assumptions:</p>
 <ul>
 <li>there is a free standing&nbsp;dhcp</li>
-<li>the dchp server has the capacity to provide a <code>next-server</code> ip and file to requesting&nbsp;clients</li>
+<li>the dchp server has the capacity to provide&nbsp;a <code>next-server</code> ip and file to requesting&nbsp;clients</li>
 <li>it does not own the data being presented and nothing loaded into the service will persist across a recreation of the&nbsp;container.</li>
 <li>the end user is familiar with docker and volume mounts and&nbsp;docker-compose</li>
 </ul>
 <h2 id="structure">Structure</h2>
-<p>This system is currently built on top of a centos 7 base image. This is primarily due to local familiarity but also because cobblers older rpms sort of &#8216;just work&#8217; on centos 7 right now. Layered over that is a supervisord configuration capable of starting cobblers constituent parts and a <code>forklift</code> script for importing flat configuration files into the system and provide the &#8216;repeatable&#8217; side of this&nbsp;setup.</p>
+<p>This system is currently built on top of a centos 7 base image. This is primarily due to local familiarity but also because cobblers older rpms sort of &#8216;just work&#8217; on centos 7 right now. Layered over that is a supervisord configuration capable of starting cobblers constituent parts and&nbsp;a <code>forklift</code> script for importing flat configuration files into the system and provide the &#8216;repeatable&#8217; side of this&nbsp;setup.</p>
 <p>The list of services started as part of this container can be found in the <a href="https://github.com/PrincetonUniversity/pni-cobbler/tree/master/supervisord/conf.d">supervisord/conf.d</a>&nbsp;folder.</p>
 
                 <!-- Neighbors -->

@@ -239,17 +239,17 @@ ga('send', 'pageview');
 <h2 id="docker-modifications">Docker&nbsp;Modifications</h2>
 <p>There&#8217;s three major things to change, iptables automation, permanently created docker networks, and your compose files. Updating each of these will have impacts on the docker daemon, or specific running containers. So this will involve a downtime for the component parts as you update&nbsp;them.</p>
 <h3 id="iptables">IPTables</h3>
-<p>First up, you need to disable the docker IPTables automation. This can be done in a few ways depending on how you manage docker, for a vanilla install you can simply add <code>{"iptables": false}</code> to your daemon file (<code>/etc/docker/daemon.json</code>). And restart the service with <code>systemctl restart docker</code>. Initially this will not change anything, as demonstrated by <code>iptables -S</code>, however if you run <code>firewall-cmd --reload</code> it will nuke those rules and everything will break (this is&nbsp;fine).</p>
+<p>First up, you need to disable the docker IPTables automation. This can be done in a few ways depending on how you manage docker, for a vanilla install you can simply&nbsp;add <code>{"iptables": false}</code> to your daemon file&nbsp;(<code>/etc/docker/daemon.json</code>). And restart the service&nbsp;with <code>systemctl restart docker</code>. Initially this will not change anything, as demonstrated&nbsp;by <code>iptables -S</code>, however if you&nbsp;run <code>firewall-cmd --reload</code> it will nuke those rules and everything will break (this is&nbsp;fine).</p>
 <h3 id="docker-networks">Docker&nbsp;Networks</h3>
-<p>For docker networks, we need to solve a thorny issue that shows up because of the change above. Unfortunately the <code>iptables</code> flag in the docker daemon is overloaded and pulling double duty to also add virtual network adapters to the docker firewall zone in firewalld. This is required for containers to be able to receive traffic. So, for any networks that you create you must choose a predictable name for that network. This can be done with the <code>--opt</code> command while creating the network. After that you can add that named network to the firewalld zone permanently. For example we use a <code>proxy</code> network for all containers that need to be made available via Traefik. We&#8217;ll need to recreate that network with a fixed name as follows (<em>note</em>: if you have a pre-existing named network, you will need to remove it&nbsp;first):</p>
+<p>For docker networks, we need to solve a thorny issue that shows up because of the change above. Unfortunately&nbsp;the <code>iptables</code> flag in the docker daemon is overloaded and pulling double duty to also add virtual network adapters to the docker firewall zone in firewalld. This is required for containers to be able to receive traffic. So, for any networks that you create you must choose a predictable name for that network. This can be done with&nbsp;the <code>--opt</code> command while creating the network. After that you can add that named network to the firewalld zone permanently. For example we use&nbsp;a <code>proxy</code> network for all containers that need to be made available via Traefik. We&#8217;ll need to recreate that network with a fixed name as follows (<em>note</em>: if you have a pre-existing named network, you will need to remove it&nbsp;first):</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>--opt<span class="w"> </span>com.docker.network.bridge.name<span class="o">=</span>proxy<span class="w"> </span>proxy
 $<span class="w"> </span>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>docker<span class="w"> </span>--add-interface<span class="o">=</span>proxy<span class="w"> </span>--permanent
 $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class="w"> </span><span class="c1">## required to enable permanent changes</span>
 </code></pre></div>
 
-<p>The above must be done for all custom networks that do not use <code>docker0</code> as their virtual network&nbsp;interface.</p>
+<p>The above must be done for all custom networks that do not&nbsp;use <code>docker0</code> as their virtual network&nbsp;interface.</p>
 <h3 id="docker-compose">Docker&nbsp;Compose</h3>
-<p>A similar update to above has to be done for compose files, however this ones a bit more awkward. For each compose entry you wish to use you need to choose a name for each of the related network. We&#8217;ll be substituting that in for <code>&lt;vnet_name&gt;</code> in each of the below code samples to make things&nbsp;work.</p>
+<p>A similar update to above has to be done for compose files, however this ones a bit more awkward. For each compose entry you wish to use you need to choose a name for each of the related network. We&#8217;ll be substituting that in&nbsp;for <code>&lt;vnet_name&gt;</code> in each of the below code samples to make things&nbsp;work.</p>
 <p>First lets add the name to the firewalld&nbsp;allows:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>docker<span class="w"> </span>--add-interface<span class="o">=</span>&lt;vnet_name&gt;<span class="w"> </span>--permanent
 $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class="w">  </span><span class="c1">##required to make this configuraiton active</span>
@@ -259,12 +259,12 @@ $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class
 <div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;service_name&gt;</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;vnet_name&gt;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 </code></pre></div>
 
 <p>And then at the bottom of the compose file&nbsp;add:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">networks</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">&lt;vnet_name&gt;</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">driver_opts</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">com.docker.network.bridge.name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;vnet_name&gt;</span>
 </code></pre></div>
@@ -280,7 +280,7 @@ $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class
 <span class="nt">networks</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">proxy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">&lt;vnet_name&gt;</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">driver_opts</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">com.docker.network.bridge.name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;vnet_name&gt;</span>
 </code></pre></div>
@@ -293,9 +293,9 @@ $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class
 $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class="w"> </span><span class="c1">## required to activate permanent rules</span>
 </code></pre></div>
 
-<p>At this point, all docker containers should be able to go out your default interfaces. If you have any other active zones, for some multi-homed devices for example, you will want to add <code>--zone</code> commands above for those additional active zones. You can see active zones with <code>firewall-cmd --get-active-zones</code>.</p>
+<p>At this point, all docker containers should be able to go out your default interfaces. If you have any other active zones, for some multi-homed devices for example, you will want to&nbsp;add <code>--zone</code> commands above for those additional active zones. You can see active zones&nbsp;with <code>firewall-cmd --get-active-zones</code>.</p>
 <h3 id="zoning-docker-interfaces">Zoning Docker&nbsp;Interfaces</h3>
-<p>There&#8217;s a quick additional tweak that needs to be made here. You simply need to add the <code>docker0</code> interface into the docker zone so it&#8217;s there by default. The following will add this for&nbsp;you:</p>
+<p>There&#8217;s a quick additional tweak that needs to be made here. You simply need to add&nbsp;the <code>docker0</code> interface into the docker zone so it&#8217;s there by default. The following will add this for&nbsp;you:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>firewall-cmd<span class="w"> </span>--zone<span class="o">=</span>docker<span class="w"> </span>--add-interface<span class="o">=</span>docker0<span class="w"> </span>--permanent
 $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class="w"> </span><span class="c1">## again required to setup permanent changes</span>
 </code></pre></div>
@@ -303,11 +303,13 @@ $<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload<span class
 <h1 id="conclusion">Conclusion</h1>
 <p>All in all this isn&#8217;t <em>that</em> annoying, but the fact that it breaks the &#8216;just works&#8217; nature of docker is a huge bummer. I wish that wasn&#8217;t the case if I&#8217;m being totally honest. At work we are migrating all of this to be managed by our puppet layer so I&#8217;ll be adding a puppet fact that detects the docker network names and adds them to the run time docker zone, and purges them when they are no longer in use to replicate this behavior, but honestly. That shouldn&#8217;t be necessary, but in the mean time I hope you find this&nbsp;helpful!</p>
 <h1 id="areas-of-improvement">Areas of&nbsp;Improvement</h1>
-<p>Unfortunately the &#8216;proper&#8217; fix for this is in the court of Docker / the Moby project. If they added a <code>firewalld</code> flag along side the <code>iptables</code> flag that simply added the virtual network device names to the docker zone and enabled masquerade for publicly facing&nbsp;zones.</p>
+<p>Unfortunately the &#8216;proper&#8217; fix for this is in the court of Docker / the Moby project. If they added&nbsp;a <code>firewalld</code> flag along side&nbsp;the <code>iptables</code> flag that simply added the virtual network device names to the docker zone and enabled masquerade for publicly facing&nbsp;zones.</p>
 <p>It should also be noted, all of the above only applies to <span class="caps">IPV4</span>. For <span class="caps">IPV6</span>? I have no idea, we don&#8217;t currently use it at work and I&#8217;ve got no use for it at home. I wouldn&#8217;t be surprised if it had some weird behavior there as well&nbsp;tho.</p>
 <h1 id="post-publication-gotchas">Post Publication&nbsp;Gotchas</h1>
 <h2 id="12-7-23">12-7-23</h2>
 <p>We found at work that despite best efforts to avoid it, no matter what we did we could not get firewalld to fully dispose of the iptables rules without a full reboot on one of our servers (rock9). After a reboot it worked exactly as&nbsp;expected.</p>
+<h2 id="9-15-2025">9-15-2025</h2>
+<p>I&#8217;ve updated the article to be a bit more accurate to the fact that you do not need to have compose create a third network named &#8216;vnet&#8217; you can tell compose to set the name of&nbsp;the <code>default</code> compose network in the same way which just means one less block of ips and resources being used up to configure this, and less confusion on given containers as they have less network connections to deal&nbsp;with.</p>
 
                 <!-- Neighbors -->
                     <br>
