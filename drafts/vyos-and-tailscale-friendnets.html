@@ -237,27 +237,35 @@ ga('send', 'pageview');
 <h1 id="changing-my-approach">Changing My&nbsp;Approach</h1>
 <p>Instead of having them each manually setup Wireguard I decided to finally give Tailscale a whirl and see if I could get it doing what I wanted. This comes with some challenges around the fact that unlike Wireguard itself, Tailscale is not a native interface for VyOS, my router <span class="caps">OS</span> of choice. To resolve this you have two choices. The first is to update the <span class="caps">ISO</span> image to include the relevant modules; this is non trivial and has been made more complicated with their recent build changes. The second is to use a container. We will be pursuing the second option in this&nbsp;article.</p>
 <h1 id="assumptions">Assumptions</h1>
-<div class="highlight"><pre><span></span><code><span class="k">*</span> You have a functioning VyOS install you want to use as an exit node
-<span class="k">*</span> You have already setup a Tailscale account
-<span class="k">*</span> You understand what a container is
-<span class="k">*</span> You have already created a container network in VYos and added it to a firewall zone
-<span class="k">*</span> You don&#39;t care about IPv6, I don&#39;t bother including it here as it&#39;s utility is limitted for most people.
-    <span class="k">*</span> Also, if you do care I assume you can figure out that part yourself
-</code></pre></div>
-
+<ul>
+<li>You have a functioning VyOS install you want to use as an exit&nbsp;node</li>
+<li>You have already setup a Tailscale&nbsp;account</li>
+<li>You understand what a container&nbsp;is</li>
+<li>You have already created a container network in VYos and added it to a firewall&nbsp;zone</li>
+<li>You don&#8217;t care about IPv6, I don&#8217;t bother including it here as it&#8217;s utility is limitted for most people.<ul>
+<li>Also, if you do care I assume you can figure out that part&nbsp;yourself</li>
+</ul>
+</li>
+</ul>
 <h1 id="initial-setup-steps">Initial setup&nbsp;steps</h1>
 <p>The VyOS side of this is drawn from the excellent if brief post on the VyOS forums found here: <a href="https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091">https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091</a></p>
 <p>While this post is great, it lacks some of the context and &#8216;why&#8217; for the configs being presented and what you&#8217;d need to replace for your own&nbsp;setup.</p>
 <h2 id="required-initial-details">Required Initial&nbsp;Details</h2>
 <p>First you will need to gather some specific information needed to get this all set up. I recommend having these written down before hand so you can just plug them in as you&nbsp;go.</p>
-<div class="highlight"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="nx">VyOS</span><span class="w"> </span><span class="nx">Container</span><span class="w"> </span><span class="nx">IP</span><span class="p">:</span>
-<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">IP</span><span class="w"> </span><span class="nx">you</span><span class="err">&#39;</span><span class="nx">ll</span><span class="w"> </span><span class="nx">use</span><span class="w"> </span><span class="nx">internally</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="nx">network</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">IP</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">tailscale</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">device</span><span class="err">&#39;</span><span class="p">.</span>
-<span class="o">*</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">wish</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">expose</span><span class="p">:</span>
-<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">IP</span><span class="w"> </span><span class="nx">ranges</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">wish</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">visible</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">Tailscale</span><span class="w"> </span><span class="nx">side</span><span class="p">.</span><span class="w"> </span><span class="nx">For</span><span class="w"> </span><span class="nx">example</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">wanted</span><span class="w"> </span><span class="nx">IPs</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="err">`</span><span class="m m-Double">192.168.100</span><span class="p">.</span><span class="o">*</span><span class="err">`</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">reachable</span><span class="p">,</span><span class="w"> </span><span class="nx">you</span><span class="err">&#39;</span><span class="nx">d</span><span class="w"> </span><span class="nx">use</span><span class="w"> </span><span class="err">`</span><span class="m m-Double">192.168.100.0</span><span class="o">/</span><span class="mi">24</span><span class="err">`</span><span class="w"> </span><span class="p">(</span><span class="nx">using</span><span class="w"> </span><span class="nx">CIDR</span><span class="w"> </span><span class="nx">notation</span><span class="p">)</span>
-<span class="o">*</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">Tailscale</span><span class="w"> </span><span class="nx">auth</span><span class="w"> </span><span class="nx">Key</span>
-<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">generated</span><span class="w"> </span><span class="nx">via</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">Tailscale</span><span class="w"> </span><span class="nx">website</span><span class="p">.</span><span class="w"> </span><span class="nx">You</span><span class="err">&#39;</span><span class="nx">ll</span><span class="w"> </span><span class="nx">find</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">place</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">create</span><span class="w"> </span><span class="nx">them</span><span class="w"> </span><span class="nx">under</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">Settings</span><span class="err">&#39;</span><span class="w"> </span><span class="nx">tab</span><span class="w"> </span><span class="nx">at</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">top</span><span class="p">,</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">click</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">Keys</span><span class="err">&#39;</span><span class="w"> </span><span class="nx">entry</span><span class="w"> </span><span class="nx">under</span><span class="w"> </span><span class="nx">peronal</span><span class="w"> </span><span class="nx">settings</span><span class="p">.</span><span class="w"> </span><span class="nx">Simply</span><span class="w"> </span><span class="nx">generate</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">one</span><span class="w"> </span><span class="nx">via</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">Generate</span><span class="w"> </span><span class="nx">Auth</span><span class="w"> </span><span class="nx">Key</span><span class="err">&#39;</span><span class="w"> </span><span class="nx">button</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">it</span><span class="w"> </span><span class="nx">quick</span><span class="w"> </span><span class="nx">description</span><span class="p">,</span><span class="w"> </span><span class="nx">otherwise</span><span class="w"> </span><span class="nx">using</span><span class="w"> </span><span class="nx">defaults</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">now</span><span class="p">.</span>
-</code></pre></div>
-
+<ul>
+<li>VyOS Container <span class="caps">IP</span>:<ul>
+<li>This is the <span class="caps">IP</span> you&#8217;ll use internally on the container network as the <span class="caps">IP</span> of your tailscale&nbsp;&#8216;device&#8217;.</li>
+</ul>
+</li>
+<li>Routes you wish to expose:<ul>
+<li>This is the <span class="caps">IP</span> ranges you wish to be visible from the Tailscale side. For example if you wanted IPs&nbsp;on <code>192.168.100.*</code> to be reachable, you&#8217;d&nbsp;use <code>192.168.100.0/24</code> (using <span class="caps">CIDR</span>&nbsp;notation)</li>
+</ul>
+</li>
+<li>A Tailscale auth Key<ul>
+<li>This is generated via the Tailscale website. You&#8217;ll find the place to create them under the &#8216;Settings&#8217; tab at the top, if you click on the &#8216;Keys&#8217; entry under peronal settings. Simply generate a new one via the &#8216;Generate Auth Key&#8217; button and give it quick description, otherwise using defaults for&nbsp;now.</li>
+</ul>
+</li>
+</ul>
 <h2 id="setting-up-the-vyos-connection">Setting up the VyOS&nbsp;connection</h2>
 <p>Before jumping into config mode, we need to pull in the image so we don&#8217;t get any errors when setting things up. To do this, just issue the following command and it&#8217;ll be pulled from the standard container&nbsp;repositories:</p>
 <p><code>add container image tailscale/tailscale:latest</code></p>
@@ -325,42 +333,42 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 </code></pre></div>
 
 <p>Once done, if you issue&nbsp;a <code>show</code> command, it should look something like&nbsp;this:</p>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">capability</span><span class="w"> </span><span class="n">net</span><span class="o">-</span><span class="n">admin</span>
-<span class="w">    </span><span class="n">capability</span><span class="w"> </span><span class="n">net</span><span class="o">-</span><span class="n">raw</span>
-<span class="w">    </span><span class="n">device</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">destination</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">tun</span>
-<span class="w">        </span><span class="n">source</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">tun</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="n">TS_AUTHKEY</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="n">tskey</span><span class="o">-</span><span class="n">auth</span><span class="o">-&lt;</span><span class="n">your</span><span class="w"> </span><span class="n">authkey</span><span class="w"> </span><span class="n">here</span><span class="o">&gt;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="n">TS_ENABLE_HEALTH_CHECK</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="bp">true</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="n">TS_EXTRA_ARGS</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="s2">&quot;--advertise-exit-node --accept-routes --snat-subnet-routes=false --stateful-filtering=false&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="n">TS_HOSTNAME</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="n">vyos_ts</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="n">TS_ROUTES</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">24</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">24</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">24</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="n">TS_USERSPACE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="bp">false</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">host</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">vyos_ts</span>
-<span class="w">    </span><span class="n">image</span><span class="w"> </span><span class="n">tailscale</span><span class="o">/</span><span class="n">tailscale</span><span class="p">:</span><span class="n">latest</span>
-<span class="w">    </span><span class="n">memory</span><span class="w"> </span><span class="mi">512</span>
-<span class="w">    </span><span class="n">network</span><span class="w"> </span><span class="n">CONTAINERNET</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">address</span><span class="w"> </span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">restart</span><span class="w"> </span><span class="n">always</span>
-<span class="w">    </span><span class="n">shared</span><span class="o">-</span><span class="n">memory</span><span class="w"> </span><span class="mi">128</span>
-<span class="w">    </span><span class="n">volume</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">destination</span><span class="w"> </span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">tailscale</span>
-<span class="w">        </span><span class="n">source</span><span class="w"> </span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">tailscale</span><span class="o">/</span><span class="n">state</span>
-<span class="w">    </span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">capability</span><span class="w"> </span><span class="n">net</span><span class="o">-</span><span class="n">admin</span>
+<span class="n">capability</span><span class="w"> </span><span class="n">net</span><span class="o">-</span><span class="n">raw</span>
+<span class="n">device</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">destination</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">tun</span>
+<span class="w">    </span><span class="n">source</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">tun</span>
+<span class="p">}</span>
+<span class="n">environment</span><span class="w"> </span><span class="n">TS_AUTHKEY</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="n">tskey</span><span class="o">-</span><span class="n">auth</span><span class="o">-&lt;</span><span class="n">your</span><span class="w"> </span><span class="n">authkey</span><span class="w"> </span><span class="n">here</span><span class="o">&gt;</span>
+<span class="p">}</span>
+<span class="n">environment</span><span class="w"> </span><span class="n">TS_ENABLE_HEALTH_CHECK</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="bp">true</span>
+<span class="p">}</span>
+<span class="n">environment</span><span class="w"> </span><span class="n">TS_EXTRA_ARGS</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="s2">&quot;--advertise-exit-node --accept-routes --snat-subnet-routes=false --stateful-filtering=false&quot;</span>
+<span class="p">}</span>
+<span class="n">environment</span><span class="w"> </span><span class="n">TS_HOSTNAME</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="n">vyos_ts</span>
+<span class="p">}</span>
+<span class="n">environment</span><span class="w"> </span><span class="n">TS_ROUTES</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">24</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">24</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">24</span>
+<span class="p">}</span>
+<span class="n">environment</span><span class="w"> </span><span class="n">TS_USERSPACE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="bp">false</span>
+<span class="p">}</span>
+<span class="n">host</span><span class="o">-</span><span class="n">name</span><span class="w"> </span><span class="n">vyos_ts</span>
+<span class="n">image</span><span class="w"> </span><span class="n">tailscale</span><span class="o">/</span><span class="n">tailscale</span><span class="p">:</span><span class="n">latest</span>
+<span class="n">memory</span><span class="w"> </span><span class="mi">512</span>
+<span class="n">network</span><span class="w"> </span><span class="n">CONTAINERNET</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">address</span><span class="w"> </span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span>
+<span class="p">}</span>
+<span class="n">restart</span><span class="w"> </span><span class="n">always</span>
+<span class="n">shared</span><span class="o">-</span><span class="n">memory</span><span class="w"> </span><span class="mi">128</span>
+<span class="n">volume</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">destination</span><span class="w"> </span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">tailscale</span>
+<span class="w">    </span><span class="n">source</span><span class="w"> </span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">tailscale</span><span class="o">/</span><span class="n">state</span>
+<span class="p">}</span>
 </code></pre></div>
 
 <h2 id="configure-routing-so-devices-are-individually">Configure Routing so devices are&nbsp;individually</h2>
