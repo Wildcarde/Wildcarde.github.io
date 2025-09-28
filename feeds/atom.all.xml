@@ -1,5 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Putting the Pieces Together</title><link href="https://blog.shadowgears.com/" rel="alternate"/><link href="https://blog.shadowgears.com/feeds/atom.all.xml" rel="self"/><id>https://blog.shadowgears.com/</id><updated>2024-02-28T00:00:00-05:00</updated><entry><title>Engineering Notebook Rules of Engagement</title><link href="https://blog.shadowgears.com/Engineering-Notebook-Rules-Engagement.html" rel="alternate"/><published>2024-02-28T00:00:00-05:00</published><updated>2024-02-28T00:00:00-05:00</updated><author><name>Garrett</name></author><id>tag:blog.shadowgears.com,2024-02-28:/Engineering-Notebook-Rules-Engagement.html</id><summary type="html">&lt;h2 id="republishing"&gt;Republishing&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Putting the Pieces Together</title><link href="https://blog.shadowgears.com/" rel="alternate"/><link href="https://blog.shadowgears.com/feeds/atom.all.xml" rel="self"/><id>https://blog.shadowgears.com/</id><updated>2025-09-27T00:00:00-04:00</updated><entry><title>Using VyOS and Tailscale to build a Friends and Family Sharing Network</title><link href="https://blog.shadowgears.com/vyos-and-tailscale-friendnets.html" rel="alternate"/><published>2025-09-27T00:00:00-04:00</published><updated>2025-09-27T00:00:00-04:00</updated><author><name>Garrett</name></author><id>tag:blog.shadowgears.com,2025-09-27:/vyos-and-tailscale-friendnets.html</id><summary type="html">&lt;h1 id="defining-the-problem-space"&gt;Defining the problem&amp;nbsp;space&lt;/h1&gt;
+&lt;p&gt;I&amp;#8217;ve been working on digitally &amp;#8216;battening down the hatches&amp;#8217; a bit at my house and trying to solve some access challenges that have been bothering me. Specifically being able to share access to applications I&amp;#8217;ve got running in my home to friends that want …&lt;/p&gt;</summary><content type="html">&lt;h1 id="defining-the-problem-space"&gt;Defining the problem&amp;nbsp;space&lt;/h1&gt;
+&lt;p&gt;I&amp;#8217;ve been working on digitally &amp;#8216;battening down the hatches&amp;#8217; a bit at my house and trying to solve some access challenges that have been bothering me. Specifically being able to share access to applications I&amp;#8217;ve got running in my home to friends that want to use them (Copyparty, Minecraft, etc.). Initially I attempted to use straight Wireguard to handle this; it&amp;#8217;s reasonably easy to use, but debugging other peoples configurations is a fairly huge pain in the ass if you aren&amp;#8217;t doing a remote support session with them at the same time. Updating configs is also challenging as it means sending new config files out to everyone, this isn&amp;#8217;t a huge deal in a managed environment but isn&amp;#8217;t really workable when passing things to people over Discord. So, an alternative solution had to be&amp;nbsp;found.&lt;/p&gt;
+&lt;h1 id="changing-my-approach"&gt;Changing My&amp;nbsp;Approach&lt;/h1&gt;
+&lt;p&gt;Instead of having them each manually setup Wireguard I decided to finally give Tailscale a whirl and see if I could get it doing what I wanted. This comes with some challenges around the fact that unlike Wireguard itself, Tailscale is not a native interface for VyOS, my router &lt;span class="caps"&gt;OS&lt;/span&gt; of choice. To resolve this you have two choices. The first is to update the &lt;span class="caps"&gt;ISO&lt;/span&gt; image to include the relevant modules; this is non trivial and has been made more complicated with their recent build changes. The second is to use a container. We will be pursuing the second option in this&amp;nbsp;article.&lt;/p&gt;
+&lt;h1 id="assumptions"&gt;Assumptions&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a functioning VyOS install you want to use as an exit&amp;nbsp;node&lt;/li&gt;
+&lt;li&gt;You have already setup a Tailscale&amp;nbsp;account&lt;/li&gt;
+&lt;li&gt;You understand what a container&amp;nbsp;is&lt;/li&gt;
+&lt;li&gt;You have already created a container network in VYos and added it to a firewall&amp;nbsp;zone&lt;/li&gt;
+&lt;li&gt;You don&amp;#8217;t care about IPv6, I don&amp;#8217;t bother including it here as it&amp;#8217;s utility is limitted for most people.&lt;ul&gt;
+&lt;li&gt;Also, if you do care I assume you can figure out that part&amp;nbsp;yourself&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="initial-setup-steps"&gt;Initial setup&amp;nbsp;steps&lt;/h1&gt;
+&lt;p&gt;The VyOS side of this is drawn from the excellent if brief post on the VyOS forums found here: &lt;a href="https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091"&gt;https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;While this post is great, it lacks some of the context and &amp;#8216;why&amp;#8217; for the configs being presented and what you&amp;#8217;d need to replace for your own&amp;nbsp;setup.&lt;/p&gt;
+&lt;h2 id="required-initial-details"&gt;Required Initial&amp;nbsp;Details&lt;/h2&gt;
+&lt;p&gt;First you will need to gather some specific information needed to get this all set up. I recommend having these written down before hand so you can just plug them in as you&amp;nbsp;go.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VyOS Container &lt;span class="caps"&gt;IP&lt;/span&gt;:&lt;ul&gt;
+&lt;li&gt;This is the &lt;span class="caps"&gt;IP&lt;/span&gt; you&amp;#8217;ll use internally on the container network as the &lt;span class="caps"&gt;IP&lt;/span&gt; of your tailscale&amp;nbsp;&amp;#8216;device&amp;#8217;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Routes you wish to expose:&lt;ul&gt;
+&lt;li&gt;This is the &lt;span class="caps"&gt;IP&lt;/span&gt; ranges you wish to be visible from the Tailscale side. For example if you wanted IPs&amp;nbsp;on &lt;code&gt;192.168.100.*&lt;/code&gt; to be reachable, you&amp;#8217;d&amp;nbsp;use &lt;code&gt;192.168.100.0/24&lt;/code&gt; (using &lt;span class="caps"&gt;CIDR&lt;/span&gt;&amp;nbsp;notation)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;A Tailscale auth Key&lt;ul&gt;
+&lt;li&gt;This is generated via the Tailscale website. You&amp;#8217;ll find the place to create them under the &amp;#8216;Settings&amp;#8217; tab at the top, if you click on the &amp;#8216;Keys&amp;#8217; entry under peronal settings. Simply generate a new one via the &amp;#8216;Generate Auth Key&amp;#8217; button and give it quick description, otherwise using defaults for&amp;nbsp;now.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="setting-up-the-vyos-connection"&gt;Setting up the VyOS&amp;nbsp;connection&lt;/h2&gt;
+&lt;p&gt;Before jumping into config mode, we need to pull in the image so we don&amp;#8217;t get any errors when setting things up. To do this, just issue the following command and it&amp;#8217;ll be pulled from the standard container&amp;nbsp;repositories:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;add container image tailscale/tailscale:latest&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Additionally we need to make a folder to store configs and state information from tailscale, this can be whatever you want but for simplicity tailscale and tailscale/state will&amp;nbsp;work:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;mkdir -p /config/telnet/state&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;With that, all the pre-config steps are done and we can dive into the config&amp;nbsp;mode.&lt;/p&gt;
+&lt;p&gt;For starters, create the new container entry and enter into editing mode for it&amp;nbsp;with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;edit&lt;span class="w"&gt; &lt;/span&gt;container
+
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;name&lt;span class="w"&gt; &lt;/span&gt;tailscale&lt;span class="w"&gt; &lt;/span&gt;image&lt;span class="w"&gt; &lt;/span&gt;ghcr.io/tailscale/tailscale:latest
+
+edit&lt;span class="w"&gt; &lt;/span&gt;name&lt;span class="w"&gt; &lt;/span&gt;tailscale
+
+&lt;span class="c1"&gt;## your editor should look like: `[edit container name tailscale]`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;From here we need to add a few container capabilities / allowances and the network&amp;nbsp;configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;## replace container network name with your containers network and replace the IP with your selected IP&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;network&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;container&lt;span class="w"&gt; &lt;/span&gt;network&lt;span class="w"&gt; &lt;/span&gt;name&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;address&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;container&lt;span class="w"&gt; &lt;/span&gt;ip&amp;gt;
+
+&lt;span class="c1"&gt;## Allow the container to create network interfaces, routing tables, and firewall rules&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;capability&lt;span class="w"&gt; &lt;/span&gt;net-admin
+
+&lt;span class="c1"&gt;## Allow the container to create raw network sockets, this may not be strictly necessary but I believe the wireguard interface requires it&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;capability&lt;span class="w"&gt; &lt;/span&gt;net-raw
+
+&lt;span class="c1"&gt;## We need to import the tunnel device into the container for it to create new VPN interfaces&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;device&lt;span class="w"&gt; &lt;/span&gt;tunnel&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;source&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;/dev/net/tun
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;device&lt;span class="w"&gt; &lt;/span&gt;tunnel&lt;span class="w"&gt; &lt;/span&gt;destination&lt;span class="w"&gt; &lt;/span&gt;/dev/net/tun
+
+&lt;span class="c1"&gt;## Configure memory limits - optional but a good belt and suspenders&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;shared-memory&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;128&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;memory&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;512&lt;/span&gt;
+
+&lt;span class="c1"&gt;## Allow the container to advertise routes to your local IP ranges of choice:&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;environment&lt;span class="w"&gt; &lt;/span&gt;TS_ROUTES&lt;span class="w"&gt; &lt;/span&gt;value&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;lt;cidr notation networks comma seperated&amp;gt;&amp;#39;&lt;/span&gt;
+
+&lt;span class="c1"&gt;## Set advertised hostname&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;environment&lt;span class="w"&gt; &lt;/span&gt;TS_HOSTNAME&lt;span class="w"&gt; &lt;/span&gt;value&lt;span class="w"&gt; &lt;/span&gt;vyos_ts
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;hostname&lt;span class="w"&gt; &lt;/span&gt;vyos_ts
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Configure the volumes and related environment&amp;nbsp;variables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;## set the state directory&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;environment&lt;span class="w"&gt; &lt;/span&gt;TS_STATE_DIR&lt;span class="w"&gt; &lt;/span&gt;value&lt;span class="w"&gt; &lt;/span&gt;/var/lib/tailscale
+
+&lt;span class="c1"&gt;## configure the volume to connect the container folder to the config directory&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;volume&lt;span class="w"&gt; &lt;/span&gt;state&lt;span class="w"&gt; &lt;/span&gt;destination&lt;span class="w"&gt; &lt;/span&gt;/var/lib/tailscale
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;volume&lt;span class="w"&gt; &lt;/span&gt;state&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;source&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;/config/tailscale/state
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And finally, configure the individual container settings for Tailscale, this is done purely with environment&amp;nbsp;variables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;## Set Auth Key for the container, replace auth key with generated key from Tailscale interface&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;environment&lt;span class="w"&gt; &lt;/span&gt;TS_AUTHKEY&lt;span class="w"&gt; &lt;/span&gt;value&lt;span class="w"&gt; &lt;/span&gt;tskey-auth-&amp;lt;auth&lt;span class="w"&gt; &lt;/span&gt;key&amp;gt;
+
+&lt;span class="c1"&gt;## Enable or disable metrics&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;environment&lt;span class="w"&gt; &lt;/span&gt;TS_ENABLE_METRICS&lt;span class="w"&gt; &lt;/span&gt;value&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+
+&lt;span class="c1"&gt;## enable health checks&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;environment&lt;span class="w"&gt; &lt;/span&gt;TS_ENABLE_HEALTH_CHECK&lt;span class="w"&gt; &lt;/span&gt;value&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+
+&lt;span class="c1"&gt;## set the container extra arguements&lt;/span&gt;
+&lt;span class="c1"&gt;## this will make the target and exit node, disable snat (making the Tailscale network routable and vis-versa)&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;environment&lt;span class="w"&gt; &lt;/span&gt;TS_EXTRA_ARGS&lt;span class="w"&gt; &lt;/span&gt;value&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;--advertise-exit-node --accept-routes --snat-subnet-routes=false --stateful-filtering=false&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Once done, if you issue&amp;nbsp;a &lt;code&gt;show&lt;/code&gt; command, it should look something like&amp;nbsp;this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;capability&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;
+&lt;span class="n"&gt;capability&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;raw&lt;/span&gt;
+&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;tunnel&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;destination&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tun&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tun&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;environment&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;TS_AUTHKEY&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;tskey&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;auth&lt;/span&gt;&lt;span class="o"&gt;-&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;your&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;authkey&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;here&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;environment&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;TS_ENABLE_HEALTH_CHECK&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="bp"&gt;true&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;environment&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;TS_EXTRA_ARGS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--advertise-exit-node --accept-routes --snat-subnet-routes=false --stateful-filtering=false&amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;environment&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;TS_HOSTNAME&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;vyos_ts&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;environment&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;TS_ROUTES&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;environment&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;TS_USERSPACE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="bp"&gt;false&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;vyos_ts&lt;/span&gt;
+&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;tailscale&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tailscale&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;latest&lt;/span&gt;
+&lt;span class="n"&gt;memory&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;512&lt;/span&gt;
+&lt;span class="n"&gt;network&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;CONTAINERNET&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;address&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;restart&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;always&lt;/span&gt;
+&lt;span class="n"&gt;shared&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;memory&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;128&lt;/span&gt;
+&lt;span class="n"&gt;volume&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;destination&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tailscale&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tailscale&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id="configure-routing-so-devices-are-individually"&gt;Configure Routing so devices are&amp;nbsp;individually&lt;/h2&gt;
+&lt;p&gt;As this setup is not using a nat / masquerade setup, we need to add a routing rule to allow being able to communicate out to the external Tailscale client devices. For this, we need to go back to the top level and set a static route to reach those&amp;nbsp;devices.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;### 100.64.0.0/10 is the ip range for tailscale devices; there are some gotchas for this&lt;/span&gt;
+&lt;span class="c1"&gt;## you might need to move to ipv6 if you run into issue with this&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;protocols&lt;span class="w"&gt; &lt;/span&gt;static&lt;span class="w"&gt; &lt;/span&gt;route&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;.64.0.0/10&lt;span class="w"&gt; &lt;/span&gt;next-hop&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;container&lt;span class="w"&gt; &lt;/span&gt;ip&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id="firewall-considerations"&gt;Firewall&amp;nbsp;Considerations&lt;/h2&gt;
+&lt;p&gt;Locally, I have my container network configured to allow access to all my internal networks, so I didn&amp;#8217;t have to do anything exotic. However if your container network is more restricted, or you want an additional layer of restrictions, you could always add a zone rule from the container space to the destination spaces you want reachable vs. unreachable. Handling this is out of scope of this article as it&amp;#8217;s more a fundamental feature of VyOS than a consideration of the Tailscale&amp;nbsp;setup.&lt;/p&gt;
+&lt;h1 id="adding-a-client-device"&gt;Adding a client&amp;nbsp;device&lt;/h1&gt;
+&lt;p&gt;This will be the same on all desktop clients, and roughly similar for mobile devices. First you need to install the client for the relevant &lt;span class="caps"&gt;OS&lt;/span&gt;, this is covered thoroughly in the official documentation &lt;a href="https://tailscale.com/kb/1347/installation"&gt;here&lt;/a&gt;. Skip logging in as it&amp;#8217;s not necessary for&amp;nbsp;this.&lt;/p&gt;
+&lt;p&gt;After that, you&amp;#8217;ll need to make a key on the Tailscale site itself, this can be done from the &amp;#8216;Settings-&amp;gt;Keys&amp;#8217; page of Tailscale once logged in. Or directly &lt;a href="https://login.tailscale.com/admin/settings/keys"&gt;from&lt;/a&gt;. Select &amp;#8216;Generate Auth Key&amp;#8217;, give it a description, and optionally add a tag for access control (detailed&amp;nbsp;below).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Tailscale Key Generation Page" src="https://blog.shadowgears.com/tailscale-key-generation.png"&gt;&lt;/p&gt;
+&lt;p&gt;Once you&amp;#8217;ve got these parts done the last step is invoking the &lt;a href="https://tailscale.com/kb/1080/cli"&gt;Tailscale &lt;span class="caps"&gt;CLI&lt;/span&gt;&lt;/a&gt; from your commandline of choice. If adding somebody else to your tailscale network you&amp;#8217;ll need to send this auth key to them, I recommend using a secure sharing solution for that and not configuring automatic approval or key&amp;nbsp;reuse.&lt;/p&gt;
+&lt;p&gt;A quick login command will get the individual device&amp;nbsp;setup:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;tailscale&lt;span class="w"&gt; &lt;/span&gt;login&lt;span class="w"&gt; &lt;/span&gt;--auth-key&lt;span class="o"&gt;=&lt;/span&gt;&amp;lt;auth&lt;span class="w"&gt; &lt;/span&gt;key&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;At this point the client is joined and everything else needs to be handled from the Tailscale management page. The key will need to be approved from the &lt;a href="https://login.tailscale.com/admin/machines"&gt;machine administration&lt;/a&gt; page for&amp;nbsp;instance.&lt;/p&gt;
+&lt;h1 id="controlling-access"&gt;Controlling&amp;nbsp;Access&lt;/h1&gt;
+&lt;p&gt;This is done fully via the &lt;a href="https://login.tailscale.com/admin/acls/visual/general-access-rules"&gt;Access Controls&lt;/a&gt;&amp;nbsp;page.&lt;/p&gt;
+&lt;p&gt;First you&amp;#8217;ll need to make &lt;a href="https://login.tailscale.com/admin/acls/visual/tags"&gt;Tags&lt;/a&gt; for the types of devices you want to classify, an easy starting point is simply &amp;#8216;Friends&amp;#8217; and &amp;#8216;Personal Devices&amp;#8217;. Once that&amp;#8217;s done you can start configuring access to things. These can then be added to the machines on the main &amp;#8216;Machines&amp;#8217; page by clicking the ellipses next to a machine&amp;nbsp;(the &lt;code&gt;...&lt;/code&gt; to the right) and&amp;nbsp;selecting &lt;code&gt;Edit ACL Tags&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;After that you&amp;#8217;ll need to create an ipset for any IPs that you want these new devies to be able to reach. Add any IPs you want to be able to reach remotely to an ipset. Simply naming&amp;nbsp;it &lt;code&gt;remote-access&lt;/code&gt; is straight forward enough for purposes&amp;nbsp;here.&lt;/p&gt;
+&lt;p&gt;Once created you can start assigning attributes and behaviors to things in the Access Rules page. The default rule allows all traffic to all devices and should be removed if that&amp;#8217;s not your goal. Then add a new rule with a source&amp;nbsp;of &lt;code&gt;tag:friends&lt;/code&gt;, and a destination&amp;nbsp;of &lt;code&gt;ipset:remote-access&lt;/code&gt; and save the rule.  This will prevent machines from the &amp;#8216;friends&amp;#8217; list from accessing anything you don&amp;#8217;t include in the list. For ease of use, adding a rule that allows all access for devices listed&amp;nbsp;as &lt;code&gt;tag:personal-devices&lt;/code&gt; and assigning the tag to your VyOS install ensures it can communicate with everything on the&amp;nbsp;network.&lt;/p&gt;
+&lt;p&gt;The json representations of these two configs would&amp;nbsp;be:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;// access allows for friends coming in from Tailscale&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;src&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tag:friends&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;dst&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ipset:remote-access&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tag:personal-devices&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;ip&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;*&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;//and&lt;/span&gt;
+
+&lt;span class="c1"&gt;// personal devices are allowed everywhere&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;src&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tag:personal-devices&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;dst&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;*&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;ip&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;*&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And at that point, you are set up, things should &amp;#8216;just work&amp;#8217; and if they don&amp;#8217;t then you&amp;#8217;ll have to dig into the specific rules and allowances you&amp;#8217;ve&amp;nbsp;configured.&lt;/p&gt;
+&lt;h1 id="alternatives-and-digressions"&gt;Alternatives and&amp;nbsp;Digressions&lt;/h1&gt;
+&lt;p&gt;Generally speaking, while the above is a bit complicated to initially groc, it works very very well. It does mean porting some responsibility out to a third party however, so if that&amp;#8217;s a concern, falling back to Wireguard or Headscale are definitely&amp;nbsp;options.&lt;/p&gt;
+&lt;h2 id="just-join-everything-to-tailscale"&gt;Just Join Everything to&amp;nbsp;Tailscale&lt;/h2&gt;
+&lt;p&gt;This is doable, and if the device limit isn&amp;#8217;t a concern you can absolutely do this. For my specific usecase I wanted Tailscale to be a &amp;#8216;portal&amp;#8217; to my home network, not a &lt;span class="caps"&gt;NAT&lt;/span&gt; bypass for my local security controls. So instead of joining everything to a network that VyOS can&amp;#8217;t distiguish against, I opted for a solution that allows anything on my local network to potential talk to a Tailscale client if need be. This also allows it to work transparently with docker containers as they do not need to be explicitly told to talk to the Tailscale network, they&amp;#8217;re just responding to a request in&amp;nbsp;the &lt;code&gt;100.64.0.0/10&lt;/code&gt; &lt;span class="caps"&gt;IP&lt;/span&gt;&amp;nbsp;range.&lt;/p&gt;
+&lt;h2 id="use-headscale-instead"&gt;Use Headscale&amp;nbsp;Instead&lt;/h2&gt;
+&lt;p&gt;This would eliminate the limitations on device counts and the limitations on users, making it easier for people to join, they can simply authenticate rather than needing you to send a key to them. However you would then need to house Headscale somewhere, either in a virtual server out on the internet or internally with port forwarding and an fqdn. That doesn&amp;#8217;t really eliminate any work in this case compared to just using Tailscale if its restrictions aren&amp;#8217;t a problem for&amp;nbsp;you.&lt;/p&gt;
+&lt;h2 id="just-suck-it-up-and-use-wireguard"&gt;Just Suck it up and use&amp;nbsp;Wireguard&lt;/h2&gt;
+&lt;p&gt;No.&lt;/p&gt;
+&lt;p&gt;As noted at the top, I did actually try this at first, but trying to get people that are potentially less technical or knowledgable of the networking configs required to make this work took that off the table. Being able to give somebody an auth key then handle all the routing config and acls yourself without having to remote into their machine or screen share is a huge improvement in time spent. I still use Wireguard for my personal devices but for allowing my parents to stream Jellyfin from my &lt;span class="caps"&gt;NAS&lt;/span&gt; directly to their AppleTV? This is trivial in comparison setup&amp;nbsp;wise.&lt;/p&gt;</content><category term="sysadmin,HowTo"/><category term="vyos"/><category term="network"/><category term="firewall"/><category term="acl"/></entry><entry><title>Engineering Notebook Rules of Engagement</title><link href="https://blog.shadowgears.com/Engineering-Notebook-Rules-Engagement.html" rel="alternate"/><published>2024-02-28T00:00:00-05:00</published><updated>2024-02-28T00:00:00-05:00</updated><author><name>Garrett</name></author><id>tag:blog.shadowgears.com,2024-02-28:/Engineering-Notebook-Rules-Engagement.html</id><summary type="html">&lt;h2 id="republishing"&gt;Republishing&lt;/h2&gt;
 &lt;p&gt;I&amp;#8217;ve decided to republish this article as I recently bought a new round of Maker notebooks. They&amp;#8217;re still very well put together books with a few minor fit and finish issues. Of the ones I received this week, one had the elastic cord ripped out of the …&lt;/p&gt;</summary><content type="html">&lt;h2 id="republishing"&gt;Republishing&lt;/h2&gt;
 &lt;p&gt;I&amp;#8217;ve decided to republish this article as I recently bought a new round of Maker notebooks. They&amp;#8217;re still very well put together books with a few minor fit and finish issues. Of the ones I received this week, one had the elastic cord ripped out of the back and two the glue had failed on the small pocket in the back of the notebook. The first issue was easily solved with a small dab of 5 minute epoxy and the other two issue with small pieces of double sided tape but it is disappointing to see that they aren&amp;#8217;t getting quite the attention they did when first made. That said they have also gotten a small visual refresh that is very pleasant on the eyes so it&amp;#8217;s not all&amp;nbsp;bad.&lt;/p&gt;
 &lt;h2 id="original-article-from-2008"&gt;Original Article From&amp;nbsp;2008&lt;/h2&gt;

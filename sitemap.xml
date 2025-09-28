@@ -6,7 +6,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -20,28 +20,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/archives.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/author/garrett-mcgrath.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/author/garrett.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/authors.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -55,28 +55,35 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/categories.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/category/glass-canopy.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/category/howto.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/category/opinion.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://blog.shadowgears.com/category/sysadminhowto.html</loc>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -90,7 +97,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/index2.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -111,266 +118,266 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.shadowgears.com/tag/acl.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/adblock.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/automation.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/blog.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/containers.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/deployment.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/dnd.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/docker.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/filezilla.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/firewall.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/firewalld.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/firewalls.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/gaming.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/glass-canopy.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/glasscanopy.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/home_automation.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/iptables.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/linux.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/moonlight.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/multimonitor.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/network.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/notebooks.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/opinion.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/organization.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/playnite.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/remote-access.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/roleplaying.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/ssh.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/steamdeck.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/story.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/sunshine.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/systems.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/traefik.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/ultrawide.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/vlan.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/vyos.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tag/windows.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.shadowgears.com/tags.html</loc>
-<lastmod>2025-09-28T01:58:28-00:00</lastmod>
+<lastmod>2025-09-28T02:03:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -378,6 +385,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://blog.shadowgears.com/unbreaking-docker-firewalld.html</loc>
 <lastmod>2023-11-06T00:00:00-05:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://blog.shadowgears.com/vyos-and-tailscale-friendnets.html</loc>
+<lastmod>2025-09-27T00:00:00-04:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>

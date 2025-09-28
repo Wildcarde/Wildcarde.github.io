@@ -19,7 +19,7 @@
 <meta property="og:title" content="Using VyOS and Tailscale to build a Friends and Family Sharing Network" />
 <meta property="og:description" content="Defining the problem space I’ve been working on digitally ‘battening down the hatches’ a bit at my house and trying to solve some access challenges that have been bothering me. Specifically being able to share access to applications I’ve got running in my home to friends that want …" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:url" content="https://blog.shadowgears.com/drafts/vyos-and-tailscale-friendnets.html" />
+<meta property="og:url" content="https://blog.shadowgears.com/vyos-and-tailscale-friendnets.html" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2025-09-27 00:00:00-04:00" />
 <meta property="article:modified_time" content="" />
@@ -383,7 +383,7 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <h1 id="adding-a-client-device">Adding a client&nbsp;device</h1>
 <p>This will be the same on all desktop clients, and roughly similar for mobile devices. First you need to install the client for the relevant <span class="caps">OS</span>, this is covered thoroughly in the official documentation <a href="https://tailscale.com/kb/1347/installation">here</a>. Skip logging in as it&#8217;s not necessary for&nbsp;this.</p>
 <p>After that, you&#8217;ll need to make a key on the Tailscale site itself, this can be done from the &#8216;Settings-&gt;Keys&#8217; page of Tailscale once logged in. Or directly <a href="https://login.tailscale.com/admin/settings/keys">from</a>. Select &#8216;Generate Auth Key&#8217;, give it a description, and optionally add a tag for access control (detailed&nbsp;below).</p>
-<p><img alt="Tailscale Key Generation Page" src="https://blog.shadowgears.com/drafts/tailscale-key-generation.png"></p>
+<p><img alt="Tailscale Key Generation Page" src="https://blog.shadowgears.com/tailscale-key-generation.png"></p>
 <p>Once you&#8217;ve got these parts done the last step is invoking the <a href="https://tailscale.com/kb/1080/cli">Tailscale <span class="caps">CLI</span></a> from your commandline of choice. If adding somebody else to your tailscale network you&#8217;ll need to send this auth key to them, I recommend using a secure sharing solution for that and not configuring automatic approval or key&nbsp;reuse.</p>
 <p>A quick login command will get the individual device&nbsp;setup:</p>
 <div class="highlight"><pre><span></span><code>tailscale<span class="w"> </span>login<span class="w"> </span>--auth-key<span class="o">=</span>&lt;auth<span class="w"> </span>key&gt;
@@ -431,7 +431,13 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
         </div>
 
         <!-- Neighbors -->
-
+            <br>
+            <b>Read more:</b><br>
+<div class="pagination">
+    <a class="w-100" href="https://blog.shadowgears.com/Engineering-Notebook-Rules-Engagement.html">
+Engineering Notebook Rules of&nbsp;Engagement
+    </a>
+</div>
         <!-- Google Adsense -->
 
     <!-- Releated posts -->
@@ -482,7 +488,7 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
         "url": "https://blog.shadowgears.com/author/garrett.html"
     },
     "image": "https://blog.shadowgears.com/favicon.ico",
-    "url": "https://blog.shadowgears.com/drafts/vyos-and-tailscale-friendnets.html",
+    "url": "https://blog.shadowgears.com/vyos-and-tailscale-friendnets.html",
     "description": "Defining the problem space I’ve been working on digitally ‘battening down the hatches’ a bit at my house and trying to solve some access challenges that have been bothering me. Specifically being able to share access to applications I’ve got running in my home to friends that want …"
 }
 </script>
