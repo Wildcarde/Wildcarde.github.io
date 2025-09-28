@@ -233,44 +233,44 @@ ga('send', 'pageview');
         <!-- Article -->
         <div>
             <h1 id="defining-the-problem-space">Defining the problem&nbsp;space</h1>
-<p>I&#8217;ve been working on digitally &#8216;battening down the hatches&#8217; a bit at my house and trying to solve some access challenges that have been bothering me. Specifically being able to share access to applications I&#8217;ve got running in my home to friends that want to use them (copyparty, minecraft, etc.). Initially I attempted to use straight wireguard to handle this; it&#8217;s reasonably easy to use, but debugging other peoples configurations is a fairly huge pain in the ass if you aren&#8217;t doing a remote support session with them at the same time. Updating configs is also challenging as it means sending new config files out to everyone, this isn&#8217;t a huge deal in a managed environment but isn&#8217;t really workable when passing things to people over discord. So, an alternative solution had to be&nbsp;found.</p>
+<p>I&#8217;ve been working on digitally &#8216;battening down the hatches&#8217; a bit at my house and trying to solve some access challenges that have been bothering me. Specifically being able to share access to applications I&#8217;ve got running in my home to friends that want to use them (Copyparty, Minecraft, etc.). Initially I attempted to use straight Wireguard to handle this; it&#8217;s reasonably easy to use, but debugging other peoples configurations is a fairly huge pain in the ass if you aren&#8217;t doing a remote support session with them at the same time. Updating configs is also challenging as it means sending new config files out to everyone, this isn&#8217;t a huge deal in a managed environment but isn&#8217;t really workable when passing things to people over Discord. So, an alternative solution had to be&nbsp;found.</p>
 <h1 id="changing-my-approach">Changing My&nbsp;Approach</h1>
-<p>Instead of having them each manually setup wireguard I decided to finally give tailscale a whirl and see if I could get it doing what I wanted. This comes with some challenges around the fact that unlike wireguard itself, tailscale is not a native interface for VyOS my router <span class="caps">OS</span> of choice. To resolve this you have two choices, either update the iso image to include the relevant modules; this is non trivial and has been made more complicated with their recent build changes, or use a container. We will be pursuing the second option in this&nbsp;article.</p>
+<p>Instead of having them each manually setup Wireguard I decided to finally give Tailscale a whirl and see if I could get it doing what I wanted. This comes with some challenges around the fact that unlike Wireguard itself, Tailscale is not a native interface for VyOS, my router <span class="caps">OS</span> of choice. To resolve this you have two choices. The first is to update the <span class="caps">ISO</span> image to include the relevant modules; this is non trivial and has been made more complicated with their recent build changes. The second is to use a container. We will be pursuing the second option in this&nbsp;article.</p>
 <h1 id="assumptions">Assumptions</h1>
-<ul>
-<li>You have a functioning VyOS install you want to use as an exit&nbsp;node</li>
-<li>You have already setup a Tailscale&nbsp;account</li>
-<li>You understand what a container&nbsp;is</li>
-<li>You have already created a container network in VYos and added it to a firewall&nbsp;zone</li>
-<li>You don&#8217;t care about IPv6, I don&#8217;t bother including it here as it&#8217;s utility is limitted for most&nbsp;people.</li>
-<li>Also, if you do care I assume you can figure out that part&nbsp;yourself</li>
-</ul>
+<div class="highlight"><pre><span></span><code><span class="k">*</span> You have a functioning VyOS install you want to use as an exit node
+<span class="k">*</span> You have already setup a Tailscale account
+<span class="k">*</span> You understand what a container is
+<span class="k">*</span> You have already created a container network in VYos and added it to a firewall zone
+<span class="k">*</span> You don&#39;t care about IPv6, I don&#39;t bother including it here as it&#39;s utility is limitted for most people.
+    <span class="k">*</span> Also, if you do care I assume you can figure out that part yourself
+</code></pre></div>
+
 <h1 id="initial-setup-steps">Initial setup&nbsp;steps</h1>
-<p>The vyos side of this is drawn from the excellent if brief post on the VYos forums found here:&nbsp;https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091</p>
+<p>The VyOS side of this is drawn from the excellent if brief post on the VyOS forums found here:&nbsp;https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091</p>
 <p>While this post is great, it lacks some of the context and &#8216;why&#8217; for the configs being presented and what you&#8217;d need to replace for your own&nbsp;setup.</p>
 <h2 id="required-initial-details">Required Initial&nbsp;Details</h2>
-<p>First you will need to gather some specific information needed to get this all setup. I recommend having these written down before hand so you can just plug them in as you&nbsp;go.</p>
+<p>First you will need to gather some specific information needed to get this all set up. I recommend having these written down before hand so you can just plug them in as you&nbsp;go.</p>
 <ul>
-<li>Vyos Container <span class="caps">IP</span>:<ul>
-<li>This is the ip you&#8217;ll use internally on the container network as the <span class="caps">IP</span> of your tailscale&nbsp;&#8216;device&#8217;.</li>
+<li>VyOS Container <span class="caps">IP</span>:<ul>
+<li>This is the <span class="caps">IP</span> you&#8217;ll use internally on the container network as the <span class="caps">IP</span> of your tailscale&nbsp;&#8216;device&#8217;.</li>
 </ul>
 </li>
 <li>Routes you wish to expose:<ul>
-<li>This is the ip ranges you wish to be visible from the tailscale side. For example if you wanted ips&nbsp;on <code>192.168.100.*</code> to be reachable, you&#8217;d&nbsp;use <code>192.168.100.0/24</code> (using <span class="caps">CIDR</span>&nbsp;notation)</li>
+<li>This is the <span class="caps">IP</span> ranges you wish to be visible from the Tailscale side. For example if you wanted IPs&nbsp;on <code>192.168.100.*</code> to be reachable, you&#8217;d&nbsp;use <code>192.168.100.0/24</code> (using <span class="caps">CIDR</span>&nbsp;notation)</li>
 </ul>
 </li>
-<li>A Tailscale Auth Key<ul>
-<li>This is generated via the tailscale website. You&#8217;ll find the place to create them under the &#8216;Settings&#8217; tab at the top, if you click on the &#8216;Keys&#8217; entry under peronal settings. Simply generate a new one via the &#8216;generate auth key&#8217; button and give it quick description, otherwise using defaults for&nbsp;now.</li>
+<li>A Tailscale auth Key<ul>
+<li>This is generated via the Tailscale website. You&#8217;ll find the place to create them under the &#8216;Settings&#8217; tab at the top, if you click on the &#8216;Keys&#8217; entry under peronal settings. Simply generate a new one via the &#8216;Generate Auth Key&#8217; button and give it quick description, otherwise using defaults for&nbsp;now.</li>
 </ul>
 </li>
 </ul>
 <h2 id="setting-up-the-vyos-connection">Setting up the VyOS&nbsp;connection</h2>
-<p>Before jumping into config mode we need to pull in the image so we don&#8217;t get any errors when setting things up, to do this just issue the following command and it&#8217;ll be pulled from the standard contianer&nbsp;repositories:</p>
+<p>Before jumping into config mode, we need to pull in the image so we don&#8217;t get any errors when setting things up. To do this, just issue the following command and it&#8217;ll be pulled from the standard container&nbsp;repositories:</p>
 <p><code>add container image tailscale/tailscale:latest</code></p>
 <p>Additionally we need to make a folder to store configs and state information from tailscale, this can be whatever you want but for simplicity tailscale and tailscale/state will&nbsp;work:</p>
 <p><code>mkdir -p /config/telnet/state</code></p>
-<p>With that all the pre-config steps are done and we can dive into the config&nbsp;mode.</p>
-<p>For starters create the new container entry and enter into editing mode for it&nbsp;with:</p>
+<p>With that, all the pre-config steps are done and we can dive into the config&nbsp;mode.</p>
+<p>For starters, create the new container entry and enter into editing mode for it&nbsp;with:</p>
 <div class="highlight"><pre><span></span><code>edit<span class="w"> </span>container
 
 <span class="nb">set</span><span class="w"> </span>name<span class="w"> </span>tailscale<span class="w"> </span>image<span class="w"> </span>ghcr.io/tailscale/tailscale:latest
@@ -281,7 +281,7 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 </code></pre></div>
 
 <p>From here we need to add a few container capabilities / allowances and the network&nbsp;configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">## replace container network name with your containers network and replace the ip with your selected ip</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## replace container network name with your containers network and replace the IP with your selected IP</span>
 <span class="nb">set</span><span class="w"> </span>network<span class="w"> </span>&lt;container<span class="w"> </span>network<span class="w"> </span>name&gt;<span class="w"> </span>address<span class="w"> </span>&lt;container<span class="w"> </span>ip&gt;
 
 <span class="c1">## Allow the container to create network interfaces, routing tables, and firewall rules</span>
@@ -290,7 +290,7 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <span class="c1">## Allow the container to create raw network sockets, this may not be strictly necessary but I believe the wireguard interface requires it</span>
 <span class="nb">set</span><span class="w"> </span>capability<span class="w"> </span>net-raw
 
-<span class="c1">## We need to import the tunnel device into the container for it to create new vpn interfaces</span>
+<span class="c1">## We need to import the tunnel device into the container for it to create new VPN interfaces</span>
 <span class="nb">set</span><span class="w"> </span>device<span class="w"> </span>tunnel<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/dev/net/tun
 <span class="nb">set</span><span class="w"> </span>device<span class="w"> </span>tunnel<span class="w"> </span>destination<span class="w"> </span>/dev/net/tun
 
@@ -298,7 +298,7 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <span class="nb">set</span><span class="w"> </span>shared-memory<span class="w"> </span><span class="m">128</span>
 <span class="nb">set</span><span class="w"> </span>memory<span class="w"> </span><span class="m">512</span>
 
-<span class="c1">## Allow the container to advertise routes to your local ip ranges of choice:</span>
+<span class="c1">## Allow the container to advertise routes to your local IP ranges of choice:</span>
 <span class="nb">set</span><span class="w"> </span>environment<span class="w"> </span>TS_ROUTES<span class="w"> </span>value<span class="w"> </span><span class="s1">&#39;&lt;cidr notation networks comma seperated&gt;&#39;</span>
 
 <span class="c1">## Set advertised hostname</span>
@@ -315,8 +315,8 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <span class="nb">set</span><span class="w"> </span>volume<span class="w"> </span>state<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/config/tailscale/state
 </code></pre></div>
 
-<p>And finally, configure the individual container settings for tailscale, this is done purely with environment&nbsp;variables:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">## Set Auth Key for the container, replace auth key with generated key from tailscale interface</span>
+<p>And finally, configure the individual container settings for Tailscale, this is done purely with environment&nbsp;variables:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Set Auth Key for the container, replace auth key with generated key from Tailscale interface</span>
 <span class="nb">set</span><span class="w"> </span>environment<span class="w"> </span>TS_AUTHKEY<span class="w"> </span>value<span class="w"> </span>tskey-auth-&lt;auth<span class="w"> </span>key&gt;
 
 <span class="c1">## Enable or disable metrics</span>
@@ -326,12 +326,13 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <span class="nb">set</span><span class="w"> </span>environment<span class="w"> </span>TS_ENABLE_HEALTH_CHECK<span class="w"> </span>value<span class="w"> </span><span class="nb">true</span>
 
 <span class="c1">## set the container extra arguements</span>
-<span class="c1">## this wilil make the target and exit node, disable snat (making the tailscale network routable and vis-versa)</span>
+<span class="c1">## this will make the target and exit node, disable snat (making the Tailscale network routable and vis-versa)</span>
 <span class="nb">set</span><span class="w"> </span>environment<span class="w"> </span>TS_EXTRA_ARGS<span class="w"> </span>value<span class="w"> </span><span class="s1">&#39;--advertise-exit-node --accept-routes --snat-subnet-routes=false --stateful-filtering=false&#39;</span>
 </code></pre></div>
 
-<p>Once done if you issue&nbsp;a <code>show</code> command it should look something like&nbsp;this:</p>
-<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="err">capabili</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="kc">net</span><span class="mi">-</span><span class="err">admi</span><span class="kc">n</span>
+<p>Once done, if you issue&nbsp;a <code>show</code> command, it should look something like&nbsp;this:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w"> </span><span class="err">capabili</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="kc">net</span><span class="mi">-</span><span class="err">admi</span><span class="kc">n</span>
 <span class="w"> </span><span class="err">capabili</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="kc">net</span><span class="mi">-</span><span class="err">raw</span>
 <span class="w"> </span><span class="err">device</span><span class="w"> </span><span class="kc">tunnel</span><span class="w"> </span><span class="p">{</span>
 <span class="w">     </span><span class="err">des</span><span class="kc">t</span><span class="err">i</span><span class="kc">nat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">/dev/</span><span class="kc">net</span><span class="err">/</span><span class="kc">tun</span>
@@ -367,34 +368,35 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <span class="w">     </span><span class="err">des</span><span class="kc">t</span><span class="err">i</span><span class="kc">nat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">/var/lib/</span><span class="kc">ta</span><span class="err">ilscale</span>
 <span class="w">     </span><span class="err">source</span><span class="w"> </span><span class="err">/co</span><span class="kc">nf</span><span class="err">ig/</span><span class="kc">ta</span><span class="err">ilscale/s</span><span class="kc">tate</span>
 <span class="w"> </span><span class="p">}</span>
+<span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 
 <h2 id="configure-routing-so-devices-are-individually">Configure Routing so devices are&nbsp;individually</h2>
-<p>As this setup is not using a nat / masquerade setup we need to add a routing rule to allow being able to communication out to the external tailscale client devices. For this we need to go back to the top level and set a static route to reach those&nbsp;devices.</p>
+<p>As this setup is not using a nat / masquerade setup, we need to add a routing rule to allow being able to communicate out to the external Tailscale client devices. For this, we need to go back to the top level and set a static route to reach those&nbsp;devices.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">### 100.64.0.0/10 is the ip range for tailscale devices; there are some gotchas for this</span>
 <span class="c1">## you might need to move to ipv6 if you run into issue with this</span>
 <span class="nb">set</span><span class="w"> </span>protocols<span class="w"> </span>static<span class="w"> </span>route<span class="w"> </span><span class="m">100</span>.64.0.0/10<span class="w"> </span>next-hop<span class="w"> </span>&lt;container<span class="w"> </span>ip&gt;
 </code></pre></div>
 
 <h2 id="firewall-considerations">Firewall&nbsp;Considerations</h2>
-<p>Locally I have my container network configured to allow access to all my internal networks so I didn&#8217;t have to do anything exotic. However if your container network is more restricted, or you want an additional layer of restrictions you could always add a zone rule from the container space to the destination spaces you want reachable vs. unreachable. Handling this is out of scope of this article as it&#8217;s more a fundamental feature of vyos than a consideration of the tailscale&nbsp;setup.</p>
+<p>Locally, I have my container network configured to allow access to all my internal networks, so I didn&#8217;t have to do anything exotic. However if your container network is more restricted, or you want an additional layer of restrictions, you could always add a zone rule from the container space to the destination spaces you want reachable vs. unreachable. Handling this is out of scope of this article as it&#8217;s more a fundamental feature of VyOS than a consideration of the Tailscale&nbsp;setup.</p>
 <h1 id="adding-a-client-device">Adding a client&nbsp;device</h1>
-<p>This will be the same on all desktop clients, and roughly similar for mobile devices. First you need to install the client for the relevant os, this is covered thoroughly in the official documentation <a href="https://tailscale.com/kb/1347/installation">here</a>. Skip logging in as it&#8217;s not necessary for&nbsp;this.</p>
-<p>After that you&#8217;ll need to make a key on the tailscale site itself, this can be done from the &#8216;settings-&gt;keys&#8217; page of tailscale once logged in. Or directly <a href="https://login.tailscale.com/admin/settings/keys">from</a>. Select &#8216;Generate auth key&#8217;, give it a description, and optionally add a tag for access control (detailed&nbsp;below).</p>
-<p><img alt="Tailscale Key Generation Pane" src="https://blog.shadowgears.com/drafts/tailscale-key-generation.png"></p>
-<p>Once you&#8217;ve got these parts done the last step is invoking the <a href="https://tailscale.com/kb/1080/cli">tailscale cli</a> from your commandline of choice. If adding somebody else to your tailscale network you&#8217;ll need to send this auth key to them, I recommend using a secure sharing solution for that and not configuring automatic approval or key&nbsp;reuse.</p>
+<p>This will be the same on all desktop clients, and roughly similar for mobile devices. First you need to install the client for the relevant <span class="caps">OS</span>, this is covered thoroughly in the official documentation <a href="https://tailscale.com/kb/1347/installation">here</a>. Skip logging in as it&#8217;s not necessary for&nbsp;this.</p>
+<p>After that, you&#8217;ll need to make a key on the Tailscale site itself, this can be done from the &#8216;Settings-&gt;Keys&#8217; page of Tailscale once logged in. Or directly <a href="https://login.tailscale.com/admin/settings/keys">from</a>. Select &#8216;Generate Auth Key&#8217;, give it a description, and optionally add a tag for access control (detailed&nbsp;below).</p>
+<p><img alt="Tailscale Key Generation Page" src="https://blog.shadowgears.com/drafts/tailscale-key-generation.png"></p>
+<p>Once you&#8217;ve got these parts done the last step is invoking the <a href="https://tailscale.com/kb/1080/cli">Tailscale <span class="caps">CLI</span></a> from your commandline of choice. If adding somebody else to your tailscale network you&#8217;ll need to send this auth key to them, I recommend using a secure sharing solution for that and not configuring automatic approval or key&nbsp;reuse.</p>
 <p>A quick login command will get the individual device&nbsp;setup:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>tailscale<span class="w"> </span>login<span class="w"> </span>--auth-key<span class="o">=</span>&lt;auth<span class="w"> </span>key&gt;
 </code></pre></div>
 
-<p>At this point the client is joined and everything else needs to be handled from the tailscale management page. The key will need to be approved from the <a href="https://login.tailscale.com/admin/machines">machine administration</a> page for&nbsp;instance.</p>
+<p>At this point the client is joined and everything else needs to be handled from the Tailscale management page. The key will need to be approved from the <a href="https://login.tailscale.com/admin/machines">machine administration</a> page for&nbsp;instance.</p>
 <h1 id="controlling-access">Controlling&nbsp;Access</h1>
-<p>This is done fully via the <a href="https://login.tailscale.com/admin/acls/visual/general-access-rules">Access controls</a>&nbsp;page.</p>
-<p>First you&#8217;ll need to make <a href="https://login.tailscale.com/admin/acls/visual/tags">tags</a> for the types of devices you want to classify, an easy starting point is simply &#8216;friends&#8217; and &#8216;personal devices&#8217;. Once that&#8217;s done you can start configuring access to things. These can then be added to the machines on the main &#8216;Machines&#8217; page by clicking the ellipses next to a machine&nbsp;(the <code>...</code> to the right) and&nbsp;selecting <code>Edit ACL tags</code>.</p>
-<p>After that you&#8217;ll need to create an ipset for any ips you want your these new devies to be able to reach. Add any ips you want to be able to reach remotely to an ipset. Simply naming&nbsp;it <code>remote-access</code> is straight forward enough for purposes&nbsp;here.</p>
-<p>Once created you can start assigning attributes and behaviors to things in the access rules page. The default rule allows all traffic to all devices and should be removed if you that&#8217;s not your goal. Then add a new rule with a source&nbsp;of <code>tag:friends</code>, and a destination&nbsp;of <code>ipset:remote-access</code> and save the rule.  This will prevent machines from the &#8216;friends&#8217; list from accessing anything you don&#8217;t include in the list. For ease of use, adding a rule that allows all access for devices listed&nbsp;as <code>tag:personal-devices</code> and assigning the tag to your vyos install ensures it can communicate with everything on the&nbsp;network.</p>
+<p>This is done fully via the <a href="https://login.tailscale.com/admin/acls/visual/general-access-rules">Access Controls</a>&nbsp;page.</p>
+<p>First you&#8217;ll need to make <a href="https://login.tailscale.com/admin/acls/visual/tags">Tags</a> for the types of devices you want to classify, an easy starting point is simply &#8216;Friends&#8217; and &#8216;Personal Devices&#8217;. Once that&#8217;s done you can start configuring access to things. These can then be added to the machines on the main &#8216;Machines&#8217; page by clicking the ellipses next to a machine&nbsp;(the <code>...</code> to the right) and&nbsp;selecting <code>Edit ACL Tags</code>.</p>
+<p>After that you&#8217;ll need to create an ipset for any IPs that you want these new devies to be able to reach. Add any IPs you want to be able to reach remotely to an ipset. Simply naming&nbsp;it <code>remote-access</code> is straight forward enough for purposes&nbsp;here.</p>
+<p>Once created you can start assigning attributes and behaviors to things in the Access Rules page. The default rule allows all traffic to all devices and should be removed if that&#8217;s not your goal. Then add a new rule with a source&nbsp;of <code>tag:friends</code>, and a destination&nbsp;of <code>ipset:remote-access</code> and save the rule.  This will prevent machines from the &#8216;friends&#8217; list from accessing anything you don&#8217;t include in the list. For ease of use, adding a rule that allows all access for devices listed&nbsp;as <code>tag:personal-devices</code> and assigning the tag to your VyOS install ensures it can communicate with everything on the&nbsp;network.</p>
 <p>The json representations of these two configs would&nbsp;be:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// access allows for friends coming in from tailscale</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// access allows for friends coming in from Tailscale</span>
 <span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;src&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tag:friends&quot;</span><span class="p">],</span>
 
@@ -416,16 +418,16 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <span class="p">}</span>
 </code></pre></div>
 
-<p>And at that point you are setup, things should &#8216;just work&#8217; and if they don&#8217;t then you&#8217;ll have to dig into the specific rules and allowances you&#8217;ve&nbsp;configured. </p>
+<p>And at that point, you are set up, things should &#8216;just work&#8217; and if they don&#8217;t then you&#8217;ll have to dig into the specific rules and allowances you&#8217;ve&nbsp;configured. </p>
 <h1 id="alternatives-and-digressions">Alternatives and&nbsp;Digressions</h1>
-<p>Generally speaking while the above is a bit complicated to initially groc it works very very well. It does mean porting some responsibility out to a third party however so if that&#8217;s a concern, falling back to wireguard or headscale are definately&nbsp;options.</p>
+<p>Generally speaking, while the above is a bit complicated to initially groc, it works very very well. It does mean porting some responsibility out to a third party however, so if that&#8217;s a concern, falling back to Wireguard or Headscale are definitely&nbsp;options.</p>
 <h2 id="just-join-everything-to-tailscale">Just Join Everything to&nbsp;Tailscale</h2>
-<p>This is doable, and if the device limit isn&#8217;t a concern you can absolutely do this. For my specific usecase I wanted tailscale to be a &#8216;portal&#8217; to my home network, not a nat bypass for my local security controls. So instead of joining everything to a network that vyos can&#8217;t distiguish against, I opted for a solution that allows anything on my local network to potential talk to a tailscale client if need be. This also allows it to work transparently with docker containers as they do not need to be explicitly told to talk to the tailscale network, they&#8217;re just responding to a request in&nbsp;the <code>100.64.0.0/10</code> ip&nbsp;range.</p>
+<p>This is doable, and if the device limit isn&#8217;t a concern you can absolutely do this. For my specific usecase I wanted Tailscale to be a &#8216;portal&#8217; to my home network, not a <span class="caps">NAT</span> bypass for my local security controls. So instead of joining everything to a network that VyOS can&#8217;t distiguish against, I opted for a solution that allows anything on my local network to potential talk to a Tailscale client if need be. This also allows it to work transparently with docker containers as they do not need to be explicitly told to talk to the Tailscale network, they&#8217;re just responding to a request in&nbsp;the <code>100.64.0.0/10</code> <span class="caps">IP</span>&nbsp;range.</p>
 <h2 id="use-headscale-instead">Use Headscale&nbsp;Instead</h2>
-<p>This would eliminate the limitations on device counts and the limitations on users making it easier for people to join, they can simply authenticate rather than needing you to send a key to them. However you would then need to house headscale somewhere, either in a virtual server out on the internet or internally with port forwarding and an fqdn. That doesn&#8217;t really eliminate any work in this case compared to just using tailscale if it&#8217;s restrictions aren&#8217;t a problem for&nbsp;you. </p>
+<p>This would eliminate the limitations on device counts and the limitations on users, making it easier for people to join, they can simply authenticate rather than needing you to send a key to them. However you would then need to house Headscale somewhere, either in a virtual server out on the internet or internally with port forwarding and an fqdn. That doesn&#8217;t really eliminate any work in this case compared to just using Tailscale if its restrictions aren&#8217;t a problem for&nbsp;you. </p>
 <h2 id="just-suck-it-up-and-use-wireguard">Just Suck it up and use&nbsp;Wireguard</h2>
 <p>No.</p>
-<p>As noted at the top, I did actually try this at first, but trying to get people that are potentially less technical or knowledgable of the networking configs required to make this work took that off the table. Being able to give somebody and auth key then handle all the routing config and acls yourself without having to remote into their machine or screen share is a huge improvement in time spent. I still use wireguard for my personal devices but for allowing my parents to stream jellyfin from my nas directly to their appletv? This is trivial in comparison setup&nbsp;wise.</p>
+<p>As noted at the top, I did actually try this at first, but trying to get people that are potentially less technical or knowledgable of the networking configs required to make this work took that off the table. Being able to give somebody an auth key then handle all the routing config and acls yourself without having to remote into their machine or screen share is a huge improvement in time spent. I still use Wireguard for my personal devices but for allowing my parents to stream Jellyfin from my <span class="caps">NAS</span> directly to their AppleTV? This is trivial in comparison setup&nbsp;wise.</p>
         </div>
 
         <!-- Neighbors -->
