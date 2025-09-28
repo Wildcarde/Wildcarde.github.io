@@ -246,24 +246,18 @@ ga('send', 'pageview');
 </code></pre></div>
 
 <h1 id="initial-setup-steps">Initial setup&nbsp;steps</h1>
-<p>The VyOS side of this is drawn from the excellent if brief post on the VyOS forums found here:&nbsp;https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091</p>
+<p>The VyOS side of this is drawn from the excellent if brief post on the VyOS forums found here: <a href="https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091">https://forum.vyos.io/t/tailscale-subnet-router-with-container-networking/15091</a></p>
 <p>While this post is great, it lacks some of the context and &#8216;why&#8217; for the configs being presented and what you&#8217;d need to replace for your own&nbsp;setup.</p>
 <h2 id="required-initial-details">Required Initial&nbsp;Details</h2>
 <p>First you will need to gather some specific information needed to get this all set up. I recommend having these written down before hand so you can just plug them in as you&nbsp;go.</p>
-<ul>
-<li>VyOS Container <span class="caps">IP</span>:<ul>
-<li>This is the <span class="caps">IP</span> you&#8217;ll use internally on the container network as the <span class="caps">IP</span> of your tailscale&nbsp;&#8216;device&#8217;.</li>
-</ul>
-</li>
-<li>Routes you wish to expose:<ul>
-<li>This is the <span class="caps">IP</span> ranges you wish to be visible from the Tailscale side. For example if you wanted IPs&nbsp;on <code>192.168.100.*</code> to be reachable, you&#8217;d&nbsp;use <code>192.168.100.0/24</code> (using <span class="caps">CIDR</span>&nbsp;notation)</li>
-</ul>
-</li>
-<li>A Tailscale auth Key<ul>
-<li>This is generated via the Tailscale website. You&#8217;ll find the place to create them under the &#8216;Settings&#8217; tab at the top, if you click on the &#8216;Keys&#8217; entry under peronal settings. Simply generate a new one via the &#8216;Generate Auth Key&#8217; button and give it quick description, otherwise using defaults for&nbsp;now.</li>
-</ul>
-</li>
-</ul>
+<div class="highlight"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="nx">VyOS</span><span class="w"> </span><span class="nx">Container</span><span class="w"> </span><span class="nx">IP</span><span class="p">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">IP</span><span class="w"> </span><span class="nx">you</span><span class="err">&#39;</span><span class="nx">ll</span><span class="w"> </span><span class="nx">use</span><span class="w"> </span><span class="nx">internally</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="nx">network</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">IP</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">tailscale</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">device</span><span class="err">&#39;</span><span class="p">.</span>
+<span class="o">*</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">wish</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">expose</span><span class="p">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">IP</span><span class="w"> </span><span class="nx">ranges</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">wish</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">visible</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">Tailscale</span><span class="w"> </span><span class="nx">side</span><span class="p">.</span><span class="w"> </span><span class="nx">For</span><span class="w"> </span><span class="nx">example</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">wanted</span><span class="w"> </span><span class="nx">IPs</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="err">`</span><span class="m m-Double">192.168.100</span><span class="p">.</span><span class="o">*</span><span class="err">`</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">reachable</span><span class="p">,</span><span class="w"> </span><span class="nx">you</span><span class="err">&#39;</span><span class="nx">d</span><span class="w"> </span><span class="nx">use</span><span class="w"> </span><span class="err">`</span><span class="m m-Double">192.168.100.0</span><span class="o">/</span><span class="mi">24</span><span class="err">`</span><span class="w"> </span><span class="p">(</span><span class="nx">using</span><span class="w"> </span><span class="nx">CIDR</span><span class="w"> </span><span class="nx">notation</span><span class="p">)</span>
+<span class="o">*</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">Tailscale</span><span class="w"> </span><span class="nx">auth</span><span class="w"> </span><span class="nx">Key</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">generated</span><span class="w"> </span><span class="nx">via</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">Tailscale</span><span class="w"> </span><span class="nx">website</span><span class="p">.</span><span class="w"> </span><span class="nx">You</span><span class="err">&#39;</span><span class="nx">ll</span><span class="w"> </span><span class="nx">find</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">place</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">create</span><span class="w"> </span><span class="nx">them</span><span class="w"> </span><span class="nx">under</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">Settings</span><span class="err">&#39;</span><span class="w"> </span><span class="nx">tab</span><span class="w"> </span><span class="nx">at</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">top</span><span class="p">,</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">click</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">Keys</span><span class="err">&#39;</span><span class="w"> </span><span class="nx">entry</span><span class="w"> </span><span class="nx">under</span><span class="w"> </span><span class="nx">peronal</span><span class="w"> </span><span class="nx">settings</span><span class="p">.</span><span class="w"> </span><span class="nx">Simply</span><span class="w"> </span><span class="nx">generate</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">one</span><span class="w"> </span><span class="nx">via</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">Generate</span><span class="w"> </span><span class="nx">Auth</span><span class="w"> </span><span class="nx">Key</span><span class="err">&#39;</span><span class="w"> </span><span class="nx">button</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">it</span><span class="w"> </span><span class="nx">quick</span><span class="w"> </span><span class="nx">description</span><span class="p">,</span><span class="w"> </span><span class="nx">otherwise</span><span class="w"> </span><span class="nx">using</span><span class="w"> </span><span class="nx">defaults</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">now</span><span class="p">.</span>
+</code></pre></div>
+
 <h2 id="setting-up-the-vyos-connection">Setting up the VyOS&nbsp;connection</h2>
 <p>Before jumping into config mode, we need to pull in the image so we don&#8217;t get any errors when setting things up. To do this, just issue the following command and it&#8217;ll be pulled from the standard container&nbsp;repositories:</p>
 <p><code>add container image tailscale/tailscale:latest</code></p>
@@ -332,43 +326,43 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 
 <p>Once done, if you issue&nbsp;a <code>show</code> command, it should look something like&nbsp;this:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w"> </span><span class="err">capabili</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="kc">net</span><span class="mi">-</span><span class="err">admi</span><span class="kc">n</span>
-<span class="w"> </span><span class="err">capabili</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="kc">net</span><span class="mi">-</span><span class="err">raw</span>
-<span class="w"> </span><span class="err">device</span><span class="w"> </span><span class="kc">tunnel</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">des</span><span class="kc">t</span><span class="err">i</span><span class="kc">nat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">/dev/</span><span class="kc">net</span><span class="err">/</span><span class="kc">tun</span>
-<span class="w">     </span><span class="err">source</span><span class="w"> </span><span class="err">/dev/</span><span class="kc">net</span><span class="err">/</span><span class="kc">tun</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_AUTHKEY</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">value</span><span class="w"> </span><span class="kc">ts</span><span class="err">key</span><span class="mi">-</span><span class="err">au</span><span class="kc">t</span><span class="err">h</span><span class="mi">-</span><span class="err">&lt;your</span><span class="w"> </span><span class="err">au</span><span class="kc">t</span><span class="err">hkey</span><span class="w"> </span><span class="err">here&gt;</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_ENABLE_HEALTH_CHECK</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">value</span><span class="w"> </span><span class="kc">true</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_EXTRA_ARGS</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">value</span><span class="w"> </span><span class="s2">&quot;--advertise-exit-node --accept-routes --snat-subnet-routes=false --stateful-filtering=false&quot;</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_HOSTNAME</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">value</span><span class="w"> </span><span class="err">vyos_</span><span class="kc">ts</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_ROUTES</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">value</span><span class="w"> </span><span class="err">x.x.x.</span><span class="mi">0</span><span class="err">/</span><span class="mi">24</span><span class="p">,</span><span class="err">x.x.y.</span><span class="mi">0</span><span class="err">/</span><span class="mi">24</span><span class="p">,</span><span class="err">x.x.z.</span><span class="mi">0</span><span class="err">/</span><span class="mi">24</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_USERSPACE</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">value</span><span class="w"> </span><span class="kc">false</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">hos</span><span class="kc">t</span><span class="mi">-</span><span class="kc">na</span><span class="err">me</span><span class="w"> </span><span class="err">vyos_</span><span class="kc">ts</span>
-<span class="w"> </span><span class="err">image</span><span class="w"> </span><span class="kc">ta</span><span class="err">ilscale/</span><span class="kc">ta</span><span class="err">ilscale</span><span class="p">:</span><span class="err">la</span><span class="kc">test</span>
-<span class="w"> </span><span class="err">memory</span><span class="w"> </span><span class="mi">512</span>
-<span class="w"> </span><span class="kc">net</span><span class="err">work</span><span class="w"> </span><span class="err">CONTAINERNET</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">address</span><span class="w"> </span><span class="err">x.x.x.x</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="err">res</span><span class="kc">tart</span><span class="w"> </span><span class="err">always</span>
-<span class="w"> </span><span class="err">shared</span><span class="mi">-</span><span class="err">memory</span><span class="w"> </span><span class="mi">128</span>
-<span class="w"> </span><span class="err">volume</span><span class="w"> </span><span class="err">s</span><span class="kc">tate</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="err">des</span><span class="kc">t</span><span class="err">i</span><span class="kc">nat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">/var/lib/</span><span class="kc">ta</span><span class="err">ilscale</span>
-<span class="w">     </span><span class="err">source</span><span class="w"> </span><span class="err">/co</span><span class="kc">nf</span><span class="err">ig/</span><span class="kc">ta</span><span class="err">ilscale/s</span><span class="kc">tate</span>
-<span class="w"> </span><span class="p">}</span>
-<span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="err">capabili</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="kc">net</span><span class="mi">-</span><span class="err">admi</span><span class="kc">n</span>
+<span class="w">    </span><span class="err">capabili</span><span class="kc">t</span><span class="err">y</span><span class="w"> </span><span class="kc">net</span><span class="mi">-</span><span class="err">raw</span>
+<span class="w">    </span><span class="err">device</span><span class="w"> </span><span class="kc">tunnel</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">des</span><span class="kc">t</span><span class="err">i</span><span class="kc">nat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">/dev/</span><span class="kc">net</span><span class="err">/</span><span class="kc">tun</span>
+<span class="w">        </span><span class="err">source</span><span class="w"> </span><span class="err">/dev/</span><span class="kc">net</span><span class="err">/</span><span class="kc">tun</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_AUTHKEY</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">value</span><span class="w"> </span><span class="kc">ts</span><span class="err">key</span><span class="mi">-</span><span class="err">au</span><span class="kc">t</span><span class="err">h</span><span class="mi">-</span><span class="err">&lt;your</span><span class="w"> </span><span class="err">au</span><span class="kc">t</span><span class="err">hkey</span><span class="w"> </span><span class="err">here&gt;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_ENABLE_HEALTH_CHECK</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">value</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_EXTRA_ARGS</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">value</span><span class="w"> </span><span class="s2">&quot;--advertise-exit-node --accept-routes --snat-subnet-routes=false --stateful-filtering=false&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_HOSTNAME</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">value</span><span class="w"> </span><span class="err">vyos_</span><span class="kc">ts</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_ROUTES</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">value</span><span class="w"> </span><span class="err">x.x.x.</span><span class="mi">0</span><span class="err">/</span><span class="mi">24</span><span class="p">,</span><span class="err">x.x.y.</span><span class="mi">0</span><span class="err">/</span><span class="mi">24</span><span class="p">,</span><span class="err">x.x.z.</span><span class="mi">0</span><span class="err">/</span><span class="mi">24</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="w"> </span><span class="err">TS_USERSPACE</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">value</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">hos</span><span class="kc">t</span><span class="mi">-</span><span class="kc">na</span><span class="err">me</span><span class="w"> </span><span class="err">vyos_</span><span class="kc">ts</span>
+<span class="w">    </span><span class="err">image</span><span class="w"> </span><span class="kc">ta</span><span class="err">ilscale/</span><span class="kc">ta</span><span class="err">ilscale</span><span class="p">:</span><span class="err">la</span><span class="kc">test</span>
+<span class="w">    </span><span class="err">memory</span><span class="w"> </span><span class="mi">512</span>
+<span class="w">    </span><span class="kc">net</span><span class="err">work</span><span class="w"> </span><span class="err">CONTAINERNET</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">address</span><span class="w"> </span><span class="err">x.x.x.x</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">res</span><span class="kc">tart</span><span class="w"> </span><span class="err">always</span>
+<span class="w">    </span><span class="err">shared</span><span class="mi">-</span><span class="err">memory</span><span class="w"> </span><span class="mi">128</span>
+<span class="w">    </span><span class="err">volume</span><span class="w"> </span><span class="err">s</span><span class="kc">tate</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">des</span><span class="kc">t</span><span class="err">i</span><span class="kc">nat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">/var/lib/</span><span class="kc">ta</span><span class="err">ilscale</span>
+<span class="w">        </span><span class="err">source</span><span class="w"> </span><span class="err">/co</span><span class="kc">nf</span><span class="err">ig/</span><span class="kc">ta</span><span class="err">ilscale/s</span><span class="kc">tate</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
 <h2 id="configure-routing-so-devices-are-individually">Configure Routing so devices are&nbsp;individually</h2>
@@ -386,7 +380,7 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <p><img alt="Tailscale Key Generation Page" src="https://blog.shadowgears.com/drafts/tailscale-key-generation.png"></p>
 <p>Once you&#8217;ve got these parts done the last step is invoking the <a href="https://tailscale.com/kb/1080/cli">Tailscale <span class="caps">CLI</span></a> from your commandline of choice. If adding somebody else to your tailscale network you&#8217;ll need to send this auth key to them, I recommend using a secure sharing solution for that and not configuring automatic approval or key&nbsp;reuse.</p>
 <p>A quick login command will get the individual device&nbsp;setup:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tailscale<span class="w"> </span>login<span class="w"> </span>--auth-key<span class="o">=</span>&lt;auth<span class="w"> </span>key&gt;
+<div class="highlight"><pre><span></span><code>tailscale<span class="w"> </span>login<span class="w"> </span>--auth-key<span class="o">=</span>&lt;auth<span class="w"> </span>key&gt;
 </code></pre></div>
 
 <p>At this point the client is joined and everything else needs to be handled from the Tailscale management page. The key will need to be approved from the <a href="https://login.tailscale.com/admin/machines">machine administration</a> page for&nbsp;instance.</p>
@@ -398,33 +392,33 @@ edit<span class="w"> </span>name<span class="w"> </span>tailscale
 <p>The json representations of these two configs would&nbsp;be:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// access allows for friends coming in from Tailscale</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;src&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tag:friends&quot;</span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;src&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tag:friends&quot;</span><span class="p">],</span>
 
-<span class="w">    </span><span class="nt">&quot;dst&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;ipset:remote-access&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;tag:personal-devices&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;dst&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="s2">&quot;ipset:remote-access&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;tag:personal-devices&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="p">],</span>
 
-<span class="w">    </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
 <span class="p">}</span>
 
 <span class="c1">//and</span>
 
 <span class="c1">// personal devices are allowed everywhere</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;src&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tag:personal-devices&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;dst&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;src&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tag:personal-devices&quot;</span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;dst&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>And at that point, you are set up, things should &#8216;just work&#8217; and if they don&#8217;t then you&#8217;ll have to dig into the specific rules and allowances you&#8217;ve&nbsp;configured. </p>
+<p>And at that point, you are set up, things should &#8216;just work&#8217; and if they don&#8217;t then you&#8217;ll have to dig into the specific rules and allowances you&#8217;ve&nbsp;configured.</p>
 <h1 id="alternatives-and-digressions">Alternatives and&nbsp;Digressions</h1>
 <p>Generally speaking, while the above is a bit complicated to initially groc, it works very very well. It does mean porting some responsibility out to a third party however, so if that&#8217;s a concern, falling back to Wireguard or Headscale are definitely&nbsp;options.</p>
 <h2 id="just-join-everything-to-tailscale">Just Join Everything to&nbsp;Tailscale</h2>
 <p>This is doable, and if the device limit isn&#8217;t a concern you can absolutely do this. For my specific usecase I wanted Tailscale to be a &#8216;portal&#8217; to my home network, not a <span class="caps">NAT</span> bypass for my local security controls. So instead of joining everything to a network that VyOS can&#8217;t distiguish against, I opted for a solution that allows anything on my local network to potential talk to a Tailscale client if need be. This also allows it to work transparently with docker containers as they do not need to be explicitly told to talk to the Tailscale network, they&#8217;re just responding to a request in&nbsp;the <code>100.64.0.0/10</code> <span class="caps">IP</span>&nbsp;range.</p>
 <h2 id="use-headscale-instead">Use Headscale&nbsp;Instead</h2>
-<p>This would eliminate the limitations on device counts and the limitations on users, making it easier for people to join, they can simply authenticate rather than needing you to send a key to them. However you would then need to house Headscale somewhere, either in a virtual server out on the internet or internally with port forwarding and an fqdn. That doesn&#8217;t really eliminate any work in this case compared to just using Tailscale if its restrictions aren&#8217;t a problem for&nbsp;you. </p>
+<p>This would eliminate the limitations on device counts and the limitations on users, making it easier for people to join, they can simply authenticate rather than needing you to send a key to them. However you would then need to house Headscale somewhere, either in a virtual server out on the internet or internally with port forwarding and an fqdn. That doesn&#8217;t really eliminate any work in this case compared to just using Tailscale if its restrictions aren&#8217;t a problem for&nbsp;you.</p>
 <h2 id="just-suck-it-up-and-use-wireguard">Just Suck it up and use&nbsp;Wireguard</h2>
 <p>No.</p>
 <p>As noted at the top, I did actually try this at first, but trying to get people that are potentially less technical or knowledgable of the networking configs required to make this work took that off the table. Being able to give somebody an auth key then handle all the routing config and acls yourself without having to remote into their machine or screen share is a huge improvement in time spent. I still use Wireguard for my personal devices but for allowing my parents to stream Jellyfin from my <span class="caps">NAS</span> directly to their AppleTV? This is trivial in comparison setup&nbsp;wise.</p>
